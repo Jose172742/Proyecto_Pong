@@ -1,4 +1,12 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp
+
+
+sf::RenderWindow(sf::VideoMde(800, 600), "Pong")
+sf::RectangleShape padde1(sf::Vector2f(10, 80));
+sf::RectangleShape padde2(sf::Vector2f(10, 80));
+sf::CircleShape ball(5);
+
 
 int main()
 {
