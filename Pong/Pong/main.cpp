@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp
+#include <SFML/Window.hpp>
 
 
 sf::RenderWindow(sf::VideoMde(800, 600), "Pong")
