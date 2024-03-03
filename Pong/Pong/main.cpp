@@ -7,6 +7,20 @@ sf::RectangleShape padde1(sf::Vector2f(10, 80));
 sf::RectangleShape padde2(sf::Vector2f(10, 80));
 sf::CircleShape ball(5);
 
+//velocidad y direccion de la pelota
+float ballSpeed = o.45f;
+sf::Vector2f ballVelocity(ballSpeed, ballSpeed);
+
+//puntuacion de cada jugador
+int scorePlayer1 = 0;
+int scorePlayer2 = 0;
+
+void resetBall(){
+ball.setPosition(400,300);
+ballVelocity.x = ballSpeed;
+ballVelocity.y = ballSpeed;
+}
+
 
 int main()
 {
