@@ -141,6 +141,7 @@ int main()
     {
         //Jugar 1 vs BOT
         //Implementar Logica con IA
+        //Simple
     }
 
     return 0;
