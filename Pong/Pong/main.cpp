@@ -1,70 +1,89 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+using namespace sf;
 
-sf::RenderWindow(sf::VideoMde(800, 600), "Pong")
-sf::RectangleShape padde1(sf::Vector2f(10, 80));
-sf::RectangleShape padde2(sf::Vector2f(10, 80));
-sf::CircleShape ball(5);
+//Declaracion Objetos Visuales
+RenderWindow(VideoMde(800, 600), "Pong");
+RectangleShape paleta1(Vector2f(10, 80));
+RectangleShape paleta2(Vector2f(10, 80));
+CircleShape pelota(5);
 
-//velocidad y direccion de la pelota
-float ballSpeed = o.45f;
-sf::Vector2f ballVelocity(ballSpeed, ballSpeed);
+//velocidad y direccion de pelota
+float velocidadPelota = o.45f;
+Vector2f velocidadPelotaVector(velocidadPelota, velocidadPelota);
 
 //puntuacion de cada jugador
-int scorePlayer1 = 0;
-int scorePlayer2 = 0;
+int puntajeJugador1 = 0;
+int puntajeJugador2 = 0;
 
-void resetBall(){
-ball.setPosition(400,300);
-ballVelocity.x = ballSpeed;
-ballVelocity.y = ballSpeed;
-}
-
-void movePaddles(){
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && paddle1.getPosition().y > 0)
+//Metodo Movimiento Paletas
+void moverPaletas()
+{
+    if (Keyboard::isKeyPressed(Keyboard::W) && paddle1.getPosition().y > 0)
     {
-        paddle1.move(0, -0.5);
+        paleta1.move(0, -0.5);
     }
 
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && paddle1.getPosition().y < 600 - paddle1.getSize().y)
+    if (Keyboard::isKeyPressed(Keyboard::S) && paddle1.getPosition().y < 600 - paddle1.getSize().y)
     {
-        paddle1.move(0, 0.5);
+        paleta1.move(0, 0.5);
     }
 
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && paddle2.getPosition().y > 0)
+    if (Keyboard::isKeyPressed(Keyboard::Up) && paddle2.getPosition().y > 0)
     {
-        paddle2.move(0, -0.5);
+        paleta2.move(0, -0.5);
     }
 
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && paddle2.getPosition().y < 600 - paddle2.getSize().y)
+    if (Keyboard::isKeyPressed(Keyboard::Down) && paddle2.getPosition().y < 600 - paddle2.getSize().y)
     {
-        paddle2.move(0, 0.5);
+        paleta2.move(0, 0.5);
     }
 }
 
+//Metodo Movimiento Pelota
+void moverPelota()
+{
+    pelota.move(velocidadPelotaVector);
 
+    //Colision con paredes
+    if (pelota.getPosition().y <= 0 || pelota.getPosition().y >= 600 - pelota.getGlobalBounds().height)
+    {
+        velocidadPelotaVector.y = -velocidadPelotaVector.y;
+    }
+
+    //Colision con paletas
+
+}
+
+//Metodo Resetear Pelota
+void resetBall()
+{
+    pelota.setPosition(400,300);
+    velocidadPelotaVector.x = velocidadPelota;
+    velocidadPelotaVector.y = velocidadPelota;
+}
 
 int main()
 {
     // Create the main window
-    sf::RenderWindow app(sf::VideoMode(800, 600), "SFML window");
+    RenderWindow app(VideoMode(800, 600), "SFML window");
 
     // Load a sprite to display
-    sf::Texture texture;
+    Texture texture;
     if (!texture.loadFromFile("cb.bmp"))
         return EXIT_FAILURE;
-    sf::Sprite sprite(texture);
+    Sprite sprite(texture);
 
-	// Start the game loop
+    // Start the game loop
     while (app.isOpen())
     {
         // Process events
-        sf::Event event;
+        Event event;
         while (app.pollEvent(event))
         {
             // Close window : exit
-            if (event.type == sf::Event::Closed)
+            if (event.type == Event::Closed)
                 app.close();
         }
 
