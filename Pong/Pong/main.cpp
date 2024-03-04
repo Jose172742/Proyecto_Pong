@@ -21,6 +21,29 @@ ballVelocity.x = ballSpeed;
 ballVelocity.y = ballSpeed;
 }
 
+void movePaddles(){
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && paddle1.getPosition().y > 0)
+    {
+        paddle1.move(0, -0.5);
+    }
+
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && paddle1.getPosition().y < 600 - paddle1.getSize().y)
+    {
+        paddle1.move(0, 0.5);
+    }
+
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && paddle2.getPosition().y > 0)
+    {
+        paddle2.move(0, -0.5);
+    }
+
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && paddle2.getPosition().y < 600 - paddle2.getSize().y)
+    {
+        paddle2.move(0, 0.5);
+    }
+}
+
+
 
 int main()
 {
