@@ -1,4 +1,4 @@
-@ -2,15 +2,16 @@
+#include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
 using namespace sf;
@@ -141,9 +141,32 @@ int mostrarMenu(){
                 {
                     return 1; // Opción 1 seleccionada
                 }
-
+                else if (evento.key.code == Keyboard::Num2)
+                {
+                    return 2; //Opcion 2 seleccionada
+                }
+            }
+            else if (evento.type == Event::MouseButtonPressed)
+            {
+                Vector2i posicionMouse = Mouse::getPosition(ventana);
+                if(opcion1.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
+                {
+                    return 1; //Opcion 1 seleccionada
+                }
+                else if(opcion2.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
+                {
+                    return 2; //Opcion 2 seleccionada
+                }
+            }
+        }
+        ventana.clear();
+        ventana.draw(titulo);
+        ventana.draw(opcion1);
+        ventana.draw(opcion2);
+        ventana.display();
+    }
+    return -1; // Se incluye para evitar advertencias del compilador
 }
-
 
 
 int main()
