@@ -5,44 +5,40 @@ using namespace sf;
 using namespace std;
 
 //Declaracion Objetos Visuales
-RenderWindow(VideoMde(800, 600), "Pong");
 RenderWindow ventana(VideoMode(800, 600), "Pong");
 RectangleShape paleta1(Vector2f(10, 80));
 RectangleShape paleta2(Vector2f(10, 80));
 CircleShape pelota(5);
 
 //velocidad y direccion de pelota
-float velocidadPelota = o.45f;
-float velocidadPelota = 0.45f;
+float velocidadPelota = 0.70f;
 Vector2f velocidadPelotaVector(velocidadPelota, velocidadPelota);
 
 //puntuacion de cada jugador
-@ -20,27 +21,35 @@ int puntajeJugador2 = 0;
+int puntajeJugador1 = 0;
+int puntajeJugador2 = 0;
+
 //Metodo Movimiento Paletas
 void moverPaletas()
 {
-    if (Keyboard::isKeyPressed(Keyboard::W) && paddle1.getPosition().y > 0)
     if (Keyboard::isKeyPressed(Keyboard::W) && paleta1.getPosition().y > 0)
     {
-        paleta1.move(0, -0.5);
+        paleta1.move(0, -1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::S) && paddle1.getPosition().y < 600 - paddle1.getSize().y)
     if (Keyboard::isKeyPressed(Keyboard::S) && paleta1.getPosition().y < 600 - paleta1.getSize().y)
     {
-        paleta1.move(0, 0.5);
+        paleta1.move(0, 1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::Up) && paddle2.getPosition().y > 0)
     if (Keyboard::isKeyPressed(Keyboard::Up) && paleta2.getPosition().y > 0)
     {
-        paleta2.move(0, -0.5);
+        paleta2.move(0, -1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::Down) && paddle2.getPosition().y < 600 - paddle2.getSize().y)
     if (Keyboard::isKeyPressed(Keyboard::Down) && paleta2.getPosition().y < 600 - paleta2.getSize().y)
     {
-        paleta2.move(0, 0.5);
+        paleta2.move(0, 1.0);
     }
 }
 
@@ -57,7 +53,12 @@ void resetearPelota()
 //Metodo Movimiento Pelota
 void moverPelota()
 {
-@ -53,49 +62,86 @@ void moverPelota()
+    pelota.move(velocidadPelotaVector);
+
+    // Colisiones con las paredes
+    if (pelota.getPosition().y <= 0 || pelota.getPosition().y >= 600 - pelota.getGlobalBounds().height)
+    {
+        velocidadPelotaVector.y = -velocidadPelotaVector.y;
     }
 
     //Colision con paletas
@@ -82,14 +83,10 @@ void moverPelota()
     }
 }
 
-//Metodo Resetear Pelota
-void resetBall()
+
 //Metodo Renderiza Ventada Visual
 void renderizarVentana()
 {
-    pelota.setPosition(400,300);
-    velocidadPelotaVector.x = velocidadPelota;
-    velocidadPelotaVector.y = velocidadPelota;
     //Declaracion en Ventana
     ventana.clear();
     ventana.draw(paleta1);
@@ -168,44 +165,19 @@ int mostrarMenu(){
     return -1; // Se incluye para evitar advertencias del compilador
 }
 
-
-int main()
-//Metodo Manejar Menu de Inicio
-int mostrarMenu()
-{
-    // Create the main window
-    RenderWindow app(VideoMode(800, 600), "SFML window");
-    //Se encargara de mostrar MENU, donde cuente con dos opciones de 1 vs 1 y 1 vs BOT
-
-    // Load a sprite to display
-    Texture texture;
-    if (!texture.loadFromFile("cb.bmp"))
-        return EXIT_FAILURE;
-    Sprite sprite(texture);
-    //Implementar fuente ARIAL, archivo ya puesto en la carpeta del proyecto
-}
-
-    // Start the game loop
-    while (app.isOpen())
 //Metodo Principal(Ejecutar)
 int main()
 {
     int eleccionMenu = mostrarMenu();
 
+    //Jugar 1 vs 1
     if (eleccionMenu == 1)
     {
-        // Process events
-        Event event;
-        while (app.pollEvent(event))
-        //Jugar 1 vs 1
         paleta1.setPosition(50, 300);
-        paleta1.setPosition(750, 300);
+        paleta2.setPosition(750, 300);
 
         while (ventana.isOpen())
         {
-            // Close window : exit
-            if (event.type == Event::Closed)
-                app.close();
             Event evento;
             while (ventana.pollEvent(evento))
             {
@@ -217,22 +189,29 @@ int main()
             moverPelota();
             renderizarVentana();
         }
-
-        // Clear screen
-        app.clear();
-
-        // Draw the sprite
-        app.draw(sprite);
-
-        // Update the window
-        app.display();
     }
+
+    //Jugar 1 vs BOT
     else if (eleccionMenu == 2)
     {
         //Jugar 1 vs BOT
-        //Implementar Logica con IA
+        ///Implementar Logica con IA
+
+        // 1. Configurar posicion inicial de las paletas
+
+        // 2. Crear bucle para eventos
+
+        // 3. Configurar movimientos
+
+        // 4. Logica para seguir la pelota
+
+        //5. Ejemplo de logica
+            //(Pelota esta arriba de paleta2(BOT) y esta no alcanza el borde superior, mover paleta2 para arriba)
+
+            // Misma logica que la de arriba, pero ahora hazlo con borde inferior y lo mueva para abajo
+
+        // 6. Mover pelota y renderizar pantalla
     }
 
-    return EXIT_SUCCESS;
     return 0;
 }
