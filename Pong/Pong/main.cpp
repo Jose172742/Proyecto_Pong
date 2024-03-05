@@ -195,7 +195,37 @@ int main()
     else if (eleccionMenu == 2)
     {
         //Jugar 1 vs BOT
-        ///Implementar Logica con IA
+        // Jugar 1 vs BOT (Aún no implementado)
+        paleta1.setPosition(50, 300);
+        paleta2.setPosition(750, 300);
+
+        while (ventana.isOpen())
+        {
+            Event evento;
+            while (ventana.pollEvent(evento))
+            {
+                if (evento.type == Event::Closed)
+                    ventana.close();
+            }
+
+            // Mover la paleta del jugador
+            moverPaletas();
+
+            // Mover la paleta del BOT (lógica simple, sigue la pelota)
+            if (pelota.getPosition().y < paleta2.getPosition().y && paleta2.getPosition().y > 0)
+            {
+                paleta2.move(0, -0.5);
+            }
+            else if (pelota.getPosition().y > paleta2.getPosition().y && paleta2.getPosition().y < 600 - paleta2.getSize().y)
+            {
+                paleta2.move(0, 0.5);
+            }
+
+            // Mover la pelota y renderizar la ventana
+            moverPelota();
+            renderizarVentana();
+            }
+        //Implementar Logica con IA
 
         // 1. Configurar posicion inicial de las paletas
 
