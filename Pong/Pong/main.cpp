@@ -95,7 +95,7 @@ void renderizarVentana()
 
     //Mostrar puntaje
     Font fuente;
-    if (fuente.loadFromFile("Arial.ttf"))
+    if (fuente.loadFromFile("Pixel-UniCode.ttf"))
     {
         Text textoPuntaje("Jugador 1: " + to_string(puntajeJugador1) + "   Jugador 2: " + to_string(puntajeJugador2), fuente, 20);
         textoPuntaje.setPosition(250, 30);
@@ -109,46 +109,41 @@ void renderizarVentana()
 int mostrarMenu()
 {
     Font fuente;
-    if (!fuente.loadFromFile("arial.ttf")) // Cambia el nombre del archivo según la fuente que uses
+    if (!fuente.loadFromFile("Pixel-UniCode.ttf")) // Cambia el nombre del archivo según la fuente que uses
     {
         // Manejo del error al cargar la fuente
         return -1;
     }
 
     ///Membrete
-    //Titulo Pong
-    Text titulo1("JUEGO PONG", fuente, 70);
+    //Titulo Proyecto Juego
+    Text titulo("Proyecto Juego Final", fuente, 30);
+    titulo.setPosition(ventana.getSize().x / 2 - titulo.getGlobalBounds().width / 2, 20);
+    titulo.setFillColor(Color::White);
+
+    //Titulo Grupo 2
+    Text titulo1("Grupo #2", fuente, 30);
     titulo1.setPosition(ventana.getSize().x / 2 - titulo1.getGlobalBounds().width / 2, 50);
     titulo1.setFillColor(Color::White);
 
-    //Titulo Universidad
-    Text titulo2("Universidad De Las Fuerzas Armadas ''ESPE'' ", fuente, 30);
+    //Titulo Pong
+    Text titulo2("JUEGO PONG", fuente, 100);
     titulo2.setPosition(ventana.getSize().x / 2 - titulo2.getGlobalBounds().width / 2, 80);
-    titulo2.setFillColor(Color::Green);
-
-    //Titulo Proyecto Juego
-    Text titulo3("Proyecto Juego", fuente, 30);
-    titulo3.setPosition(ventana.getSize().x / 2 - titulo3.getGlobalBounds().width / 2, 100);
-    titulo3.setFillColor(Color::White);
-
-    //Titulo Grupo 2
-    Text titulo4("Grupo 2", fuente, 30);
-    titulo4.setPosition(ventana.getSize().x / 2 - titulo4.getGlobalBounds().width / 2, 120);
-    titulo4.setFillColor(Color::White);
+    titulo2.setFillColor(Color::Red);
 
     //Boton Opcion 1 (1 VS 1)
-    Text opcion1("Jugar 1 vs 1", fuente, 20);
-    opcion1.setPosition(150, 200);
+    Text opcion1("Jugar 1 vs 1", fuente, 30);
+    opcion1.setPosition(150, 300);
     opcion1.setFillColor(Color::White);
 
     //Boton Opcion 2 (1 VS BOT)
-    Text opcion2("Jugar 1 vs BOT", fuente, 20);
-    opcion2.setPosition(150, 250);
+    Text opcion2("Jugar 1 vs BOT", fuente, 30);
+    opcion2.setPosition(150, 350);
     opcion2.setFillColor(Color::White);
 
     //Boton Salir
-    Text opcionSalir("Salir", fuente, 20);
-    opcionSalir.setPosition(150, 300);
+    Text opcionSalir("Salir", fuente, 30);
+    opcionSalir.setPosition(150, 400);
     opcionSalir.setFillColor(Color::Red);
 
     while (ventana.isOpen())
@@ -190,10 +185,9 @@ int mostrarMenu()
 
         ventana.clear();
 
+        ventana.draw(titulo);
         ventana.draw(titulo1);
         ventana.draw(titulo2);
-        ventana.draw(titulo3);
-        ventana.draw(titulo4);
 
         ventana.draw(opcion1);
         ventana.draw(opcion2);
@@ -233,8 +227,6 @@ int main()
     //Jugar 1 vs BOT
     else if (eleccionMenu == 2)
     {
-        //Jugar 1 vs BOT
-        // Jugar 1 vs BOT (Aún no implementado)
         paleta1.setPosition(50, 300);
         paleta2.setPosition(750, 300);
 
