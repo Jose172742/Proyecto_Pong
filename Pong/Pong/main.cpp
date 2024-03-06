@@ -11,7 +11,7 @@ RectangleShape paleta2(Vector2f(10, 80));
 CircleShape pelota(5);
 
 //velocidad y direccion de pelota
-float velocidadPelota = 0.70f;
+float velocidadPelota = 0.60f;
 Vector2f velocidadPelotaVector(velocidadPelota, velocidadPelota);
 
 //puntuacion de cada jugador
@@ -63,7 +63,7 @@ void moverPelota()
 
     //Colision con paletas
     if ((pelota.getGlobalBounds().intersects(paleta1.getGlobalBounds())) ||
-    (pelota.getGlobalBounds().intersects(paleta2.getGlobalBounds())))
+            (pelota.getGlobalBounds().intersects(paleta2.getGlobalBounds())))
     {
         velocidadPelotaVector.x = -velocidadPelotaVector.x;
     }
@@ -106,60 +106,99 @@ void renderizarVentana()
 }
 
 // Función para manejar el menú de inicio
-int mostrarMenu(){
+int mostrarMenu()
+{
     Font fuente;
-     if (!fuente.loadFromFile("arial.ttf")) // Cambia el nombre del archivo según la fuente que uses
+    if (!fuente.loadFromFile("arial.ttf")) // Cambia el nombre del archivo según la fuente que uses
     {
         // Manejo del error al cargar la fuente
         return -1;
     }
-    Text titulo("Pong Grupo 2 - Estructura de Datos", fuente, 30);
-    titulo.setPosition(100, 50);
 
-    Text opcion1("1. Jugar 1 vs 1", fuente, 20);
+    ///Membrete
+    //Titulo Pong
+    Text titulo1("JUEGO PONG", fuente, 70);
+    titulo1.setPosition(ventana.getSize().x / 2 - titulo1.getGlobalBounds().width / 2, 50);
+    titulo1.setFillColor(Color::White);
+
+    //Titulo Universidad
+    Text titulo2("Universidad De Las Fuerzas Armadas ''ESPE'' ", fuente, 30);
+    titulo2.setPosition(ventana.getSize().x / 2 - titulo2.getGlobalBounds().width / 2, 80);
+    titulo2.setFillColor(Color::Green);
+
+    //Titulo Proyecto Juego
+    Text titulo3("Proyecto Juego", fuente, 30);
+    titulo3.setPosition(ventana.getSize().x / 2 - titulo3.getGlobalBounds().width / 2, 100);
+    titulo3.setFillColor(Color::White);
+
+    //Titulo Grupo 2
+    Text titulo4("Grupo 2", fuente, 30);
+    titulo4.setPosition(ventana.getSize().x / 2 - titulo4.getGlobalBounds().width / 2, 120);
+    titulo4.setFillColor(Color::White);
+
+    //Boton Opcion 1 (1 VS 1)
+    Text opcion1("Jugar 1 vs 1", fuente, 20);
     opcion1.setPosition(150, 200);
+    opcion1.setFillColor(Color::White);
 
-    Text opcion2("2. Jugar 1 vs BOT (No implementado)", fuente, 20);
+    //Boton Opcion 2 (1 VS BOT)
+    Text opcion2("Jugar 1 vs BOT", fuente, 20);
     opcion2.setPosition(150, 250);
+    opcion2.setFillColor(Color::White);
+
+    //Boton Salir
+    Text opcionSalir("Salir", fuente, 20);
+    opcionSalir.setPosition(150, 300);
+    opcionSalir.setFillColor(Color::Red);
 
     while (ventana.isOpen())
     {
         Event evento;
         while (ventana.pollEvent(evento))
         {
+            // Se cerró la ventana, terminar la ejecución
             if (evento.type == Event::Closed)
             {
                 ventana.close();
-                return -1; // Se cerró la ventana, terminar la ejecución
+                return -1;
             }
-            else if (evento.type == Event::KeyPressed)
-            {
-                if (evento.key.code == Keyboard::Num1)
-                {
-                    return 1; // Opción 1 seleccionada
-                }
-                else if (evento.key.code == Keyboard::Num2)
-                {
-                    return 2; //Opcion 2 seleccionada
-                }
-            }
+
+            ///Opciones de Juego con mouse
             else if (evento.type == Event::MouseButtonPressed)
             {
                 Vector2i posicionMouse = Mouse::getPosition(ventana);
+
+                //Opcion 1 seleccionada
                 if(opcion1.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
                 {
-                    return 1; //Opcion 1 seleccionada
+                    return 1;
                 }
+
+                //Opcion 2 seleccionada
                 else if(opcion2.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
                 {
-                    return 2; //Opcion 2 seleccionada
+                    return 2;
+                }
+
+                //Opcion Salir seleccionada
+                else if(opcionSalir.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
+                {
+                    return -1;
                 }
             }
         }
+
         ventana.clear();
-        ventana.draw(titulo);
+
+        ventana.draw(titulo1);
+        ventana.draw(titulo2);
+        ventana.draw(titulo3);
+        ventana.draw(titulo4);
+
         ventana.draw(opcion1);
         ventana.draw(opcion2);
+        ventana.draw(opcionSalir);
+
         ventana.display();
     }
     return -1; // Se incluye para evitar advertencias del compilador
@@ -224,23 +263,7 @@ int main()
             // Mover la pelota y renderizar la ventana
             moverPelota();
             renderizarVentana();
-            }
-        //Implementar Logica con IA
-
-        // 1. Configurar posicion inicial de las paletas
-
-        // 2. Crear bucle para eventos
-
-        // 3. Configurar movimientos
-
-        // 4. Logica para seguir la pelota
-
-        //5. Ejemplo de logica
-            //(Pelota esta arriba de paleta2(BOT) y esta no alcanza el borde superior, mover paleta2 para arriba)
-
-            // Misma logica que la de arriba, pero ahora hazlo con borde inferior y lo mueva para abajo
-
-        // 6. Mover pelota y renderizar pantalla
+        }
     }
 
     return 0;
