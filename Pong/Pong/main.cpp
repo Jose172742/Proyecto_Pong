@@ -89,6 +89,15 @@ void renderizarVentana()
 {
     //Declaracion en Ventana
     ventana.clear();
+
+    //Dibujar recuadro global
+    RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
+    recuadro.setPosition(50, 70);
+    recuadro.setOutlineThickness(1);
+    recuadro.setOutlineColor(Color::White);
+    recuadro.setFillColor(Color::Transparent);
+    ventana.draw(recuadro);
+
     ventana.draw(paleta1);
     ventana.draw(paleta2);
     ventana.draw(pelota);
@@ -99,12 +108,12 @@ void renderizarVentana()
     {
         //Puntaje Jugador 1
         Text textoPuntaje1(to_string(puntajeJugador1), fuente, 50);
-        textoPuntaje1.setPosition(ventana.getSize().x / 4 - 25, 30);
+        textoPuntaje1.setPosition(ventana.getSize().x / 4 - 25, 5);
         ventana.draw(textoPuntaje1);
 
         //Puntaje Jugador
         Text textoPuntaje2(to_string(puntajeJugador2), fuente, 50);
-        textoPuntaje2.setPosition(3 * ventana.getSize().x / 4 - 25, 30);
+        textoPuntaje2.setPosition(3 * ventana.getSize().x / 4 - 25, 5);
         ventana.draw(textoPuntaje2);
     }
 
