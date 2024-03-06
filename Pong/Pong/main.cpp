@@ -5,10 +5,10 @@ using namespace sf;
 using namespace std;
 
 //Declaracion Objetos Visuales
-RenderWindow ventana(VideoMode(800, 600), "Pong");
-RectangleShape paleta1(Vector2f(10, 80));
-RectangleShape paleta2(Vector2f(10, 80));
-CircleShape pelota(5);
+RenderWindow ventana(VideoMode(1200, 750), "Pong");
+RectangleShape paleta1(Vector2f(15, 100));
+RectangleShape paleta2(Vector2f(15, 100));
+CircleShape pelota(10);
 
 //velocidad y direccion de pelota
 float velocidadPelota = 0.60f;
@@ -26,7 +26,7 @@ void moverPaletas()
         paleta1.move(0, -1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::S) && paleta1.getPosition().y < 600 - paleta1.getSize().y)
+    if (Keyboard::isKeyPressed(Keyboard::S) && paleta1.getPosition().y < ventana.getSize().y - paleta1.getSize().y)
     {
         paleta1.move(0, 1.0);
     }
@@ -36,7 +36,7 @@ void moverPaletas()
         paleta2.move(0, -1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::Down) && paleta2.getPosition().y < 600 - paleta2.getSize().y)
+    if (Keyboard::isKeyPressed(Keyboard::Down) && paleta2.getPosition().y < ventana.getSize().y - paleta2.getSize().y)
     {
         paleta2.move(0, 1.0);
     }
@@ -45,7 +45,7 @@ void moverPaletas()
 //Metodo Resetear Pelota
 void resetearPelota()
 {
-    pelota.setPosition(400,300);
+    pelota.setPosition(ventana.getSize().x / 2 - pelota.getRadius(), ventana.getSize().y / 2 - pelota.getRadius());
     velocidadPelotaVector.x = velocidadPelota;
     velocidadPelotaVector.y = velocidadPelota;
 }
@@ -56,7 +56,7 @@ void moverPelota()
     pelota.move(velocidadPelotaVector);
 
     // Colisiones con las paredes
-    if (pelota.getPosition().y <= 0 || pelota.getPosition().y >= 600 - pelota.getGlobalBounds().height)
+    if (pelota.getPosition().y <= 0 || pelota.getPosition().y >= ventana.getSize().y - pelota.getGlobalBounds().height)
     {
         velocidadPelotaVector.y = -velocidadPelotaVector.y;
     }
@@ -75,7 +75,7 @@ void moverPelota()
         puntajeJugador2++;
         resetearPelota();
     }
-    if (pelota.getPosition().x >= 800 - pelota.getGlobalBounds().width)
+    if (pelota.getPosition().x >= ventana.getSize().x - pelota.getGlobalBounds().width)
     {
         //Jugador 1
         puntajeJugador1++;
@@ -206,8 +206,8 @@ int main()
     //Jugar 1 vs 1
     if (eleccionMenu == 1)
     {
-        paleta1.setPosition(50, 300);
-        paleta2.setPosition(750, 300);
+        paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
+        paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
 
         while (ventana.isOpen())
         {
@@ -227,8 +227,8 @@ int main()
     //Jugar 1 vs BOT
     else if (eleccionMenu == 2)
     {
-        paleta1.setPosition(50, 300);
-        paleta2.setPosition(750, 300);
+        paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
+        paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
 
         while (ventana.isOpen())
         {
@@ -247,7 +247,7 @@ int main()
             {
                 paleta2.move(0, -0.5);
             }
-            else if (pelota.getPosition().y > paleta2.getPosition().y && paleta2.getPosition().y < 600 - paleta2.getSize().y)
+            else if (pelota.getPosition().y > paleta2.getPosition().y && paleta2.getPosition().y < ventana.getSize().y - paleta2.getSize().y)
             {
                 paleta2.move(0, 0.5);
             }
