@@ -97,9 +97,15 @@ void renderizarVentana()
     Font fuente;
     if (fuente.loadFromFile("Pixel-UniCode.ttf"))
     {
-        Text textoPuntaje("Jugador 1: " + to_string(puntajeJugador1) + "   Jugador 2: " + to_string(puntajeJugador2), fuente, 20);
-        textoPuntaje.setPosition(250, 30);
-        ventana.draw(textoPuntaje);
+        //Puntaje Jugador 1
+        Text textoPuntaje1(to_string(puntajeJugador1), fuente, 50);
+        textoPuntaje1.setPosition(ventana.getSize().x / 4 - 25, 30);
+        ventana.draw(textoPuntaje1);
+
+        //Puntaje Jugador
+        Text textoPuntaje2(to_string(puntajeJugador2), fuente, 50);
+        textoPuntaje2.setPosition(3 * ventana.getSize().x / 4 - 25, 30);
+        ventana.draw(textoPuntaje2);
     }
 
     ventana.display();
