@@ -172,6 +172,11 @@ int mostrarMenu()
                 {
                     puntajeJugador1 = 0;
                     puntajeJugador2 = 0;
+
+                    paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
+                    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
+                    resetearPelota();
+
                     return 1;
                 }
 
@@ -180,6 +185,11 @@ int mostrarMenu()
                 {
                     puntajeJugador1 = 0;
                     puntajeJugador2 = 0;
+
+                    paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
+                    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
+                    resetearPelota();
+
                     return 2;
                 }
 

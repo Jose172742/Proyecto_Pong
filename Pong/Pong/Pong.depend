@@ -1,8 +1,7 @@
 # depslib dependency file v1.0
-1709841966 source:c:\users\joses\onedrive\documentos\github\proyecto_pong\pong\pong\main.cpp
+1709843187 source:c:\users\joses\onedrive\documentos\github\proyecto_pong\pong\pong\main.cpp
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
-	<SFML/Audio/Music.hpp>
 
 1525812018 c:\program files\codeblocks\sfml\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
