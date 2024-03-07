@@ -193,9 +193,30 @@ void renderizarVentana()
         textoPuntaje2.setPosition(3 * ventana.getSize().x / 4 - 25, 5);
         ventana.draw(textoPuntaje2);
     }
+    if(pausado)
+    {
+        pausarJuego();
+    }
 
     ventana.display();
 }
+
+void entradaPausa()
+{
+    Event evento;
+    while(ventana.pollEvent(evento))
+    {
+        if(evento,type == Event::Closed)
+            ventana.close();
+
+        //Pulsar P para pausar
+        if(evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+        {
+            pausado = !pausado;
+        }
+    }
+}
+
 
 // Función para manejar el menú de inicio
 int mostrarMenu()
