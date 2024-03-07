@@ -108,6 +108,21 @@ void moverPelota()
     }
 }
 
+//Metodo Reinicio Juego
+void reiniciarJuego()
+{
+    puntajeJugador1 = 0;
+    puntajeJugador2 = 0;
+
+    paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
+    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
+
+    resetearPelota();
+
+    pausado = false;
+}
+
+
 // Función para manejar el menú de inicio
 int mostrarMenu()
 {
@@ -170,26 +185,14 @@ int mostrarMenu()
                 //Opcion 1 seleccionada
                 if(opcion1.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
                 {
-                    puntajeJugador1 = 0;
-                    puntajeJugador2 = 0;
-
-                    paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
-                    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
-                    resetearPelota();
-
+                    reiniciarJuego();
                     return 1;
                 }
 
                 //Opcion 2 seleccionada
                 else if(opcion2.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
                 {
-                    puntajeJugador1 = 0;
-                    puntajeJugador2 = 0;
-
-                    paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
-                    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
-                    resetearPelota();
-
+                    reiniciarJuego();
                     return 2;
                 }
 
@@ -217,22 +220,55 @@ int mostrarMenu()
     return -1; // Se incluye para evitar advertencias del compilador
 }
 
-//Metodo Entrada Pausa
-void entradaPausa()
+//Metodo de Ganar
+void mostrarFinDeJuego(int jugadorGanador)
 {
-    Event evento;
-    while(ventana.pollEvent(evento))
-    {
-        if(evento.type == Event::Closed)
-            ventana.close();
+    Font fuente;
+    string mensaje = "GANA JUGADOR" + to_string(jugadorGanador);
+    Text mensajeVictoria(mensaje, fuente, 50);
+    mensajeVictoria.setPosition(ventana.getSize().x / 2 - mensajeVictoria.getGlobalBounds().width / 2, 100);
+    //ventana.draw(mensajeVictoria);
 
-        //Pulsar P para pausar
-        if(evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+    while (ventana.isOpen())
+    {
+        Event evento;
+        while (ventana.pollEvent(evento))
         {
-            pausado = !pausado;
+            // Se cerró la ventana, terminar la ejecución
+            if (evento.type == Event::Closed)
+            {
+                ventana.close();
+                return;
+            }
+
         }
+
+        ventana.clear();
+        ventana.draw(mensajeVictoria);
+        ventana.display();
+
+        sleep(seconds(3));
+        return;
+
     }
 }
+
+//Metodo Entrada Pausa
+    void entradaPausa()
+    {
+        Event evento;
+        while(ventana.pollEvent(evento))
+        {
+            if(evento.type == Event::Closed)
+                ventana.close();
+
+            //Pulsar P para pausar
+            if(evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+            {
+                pausado = !pausado;
+            }
+        }
+    }
 
 //Metodo Pausar Juego
 void pausarJuego()
@@ -288,6 +324,7 @@ void pausarJuego()
         }
     }
 
+    /*
     if (pausado && (puntajeJugador1 >= puntajeParaGanar || puntajeJugador2 >= puntajeParaGanar))
     {
         Text mensajeVictoria;
@@ -303,8 +340,9 @@ void pausarJuego()
         mensajeVictoria.setCharacterSize(30);
         mensajeVictoria.setPosition(ventana.getSize().x / 2 - mensajeVictoria.getGlobalBounds().width / 2, 100);
         ventana.draw(mensajeVictoria);
-    }
+        */
 }
+
 
 //Metodo Renderiza Ventada Visual
 void renderizarVentana()
@@ -410,7 +448,8 @@ int main()
                 moverPelota();
                 if (puntajeJugador1 >= puntajeParaGanar || puntajeJugador2 >= puntajeParaGanar)
                 {
-                    pausado = true;
+                    mostrarFinDeJuego(1);
+                    eleccionMenu = mostrarMenu();
                 }
 
             }
@@ -425,6 +464,7 @@ int main()
         paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
         paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
         resetearPelota();
+        reiniciarJuego();
 
         while (ventana.isOpen())
         {
@@ -461,7 +501,8 @@ int main()
                 moverPelota();
                 if (puntajeJugador1 >= puntajeParaGanar || puntajeJugador2 >= puntajeParaGanar)
                 {
-                    pausado = true;
+                    mostrarFinDeJuego(2);
+                    eleccionMenu = mostrarMenu();
                 }
 
             }
