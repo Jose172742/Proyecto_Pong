@@ -17,7 +17,7 @@ RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y 
 
 //velocidad y direccion de pelota
 float velocidadPelota = 0.60f;
-Vector2f velocidadPelotaVector(velocidadPelota, velocidadPelota);
+Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 
 //puntuacion de cada jugador
 int puntajeJugador1 = 0;
@@ -61,8 +61,9 @@ void resetearPelota()
     float posY = recuadro.getPosition().y + recuadro.getSize().y / 2 - pelota.getRadius();
 
     pelota.setPosition(posX, posY);
+
     velocidadPelotaVector.x = velocidadPelota;
-    velocidadPelotaVector.y = velocidadPelota;
+    velocidadPelotaVector.y = -velocidadPelota;
 }
 
 //Metodo Movimiento Pelota
