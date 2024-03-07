@@ -6,6 +6,7 @@
 using namespace sf;
 using namespace std;
 
+///Declaraciones Globales
 //Declaracion Objetos Visuales
 RenderWindow ventana(VideoMode(1200, 750), "Pong");
 RectangleShape paleta1(Vector2f(15, 100));
@@ -15,19 +16,19 @@ CircleShape pelota(10);
 RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
 vector<RectangleShape> lineaPunteada;
 
-//velocidad y direccion de pelota
-float velocidadPelota = 0.60f;
-Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
+int eleccionMenu;
 
 //puntuacion de cada jugador
 int puntajeJugador1 = 0;
 int puntajeJugador2 = 0;
 
-/*// Declaración de la música de fondo
-Music musicaFondo;*/
+//velocidad y direccion de pelota
+float velocidadPelota = 0.60f;
+Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 
 //Variable para controlar la pausa
 bool pausado = false;
+///
 
 //Metodo Movimiento Paletas
 void moverPaletas()
@@ -106,16 +107,135 @@ void moverPelota()
     }
 }
 
+// Función para manejar el menú de inicio
+int mostrarMenu()
+{
+    Font fuente;
+    if (!fuente.loadFromFile("Pixel-UniCode.ttf")) // Cambia el nombre del archivo según la fuente que uses
+    {
+        // Manejo del error al cargar la fuente
+        return -1;
+    }
+
+
+    //Membrete
+    //Titulo Proyecto Juego
+    Text titulo("Proyecto Juego Final", fuente, 30);
+    titulo.setPosition(ventana.getSize().x / 2 - titulo.getGlobalBounds().width / 2, 20);
+    titulo.setFillColor(Color::White);
+
+    //Titulo Grupo 2
+    Text titulo1("Grupo #2", fuente, 30);
+    titulo1.setPosition(ventana.getSize().x / 2 - titulo1.getGlobalBounds().width / 2, 50);
+    titulo1.setFillColor(Color::White);
+
+    //Titulo Pong
+    Text titulo2("JUEGO PONG", fuente, 100);
+    titulo2.setPosition(ventana.getSize().x / 2 - titulo2.getGlobalBounds().width / 2, 80);
+    titulo2.setFillColor(Color::Red);
+
+    //Boton Opcion 1 (1 VS 1)
+    Text opcion1("Jugar 1 vs 1", fuente, 30);
+    opcion1.setPosition(150, 300);
+    opcion1.setFillColor(Color::White);
+
+    //Boton Opcion 2 (1 VS BOT)
+    Text opcion2("Jugar 1 vs BOT", fuente, 30);
+    opcion2.setPosition(150, 350);
+    opcion2.setFillColor(Color::White);
+
+    //Boton Salir
+    Text opcionSalir("Salir", fuente, 30);
+    opcionSalir.setPosition(150, 400);
+    opcionSalir.setFillColor(Color::Red);
+
+    while (ventana.isOpen())
+    {
+        Event evento;
+        while (ventana.pollEvent(evento))
+        {
+            // Se cerró la ventana, terminar la ejecución
+            if (evento.type == Event::Closed)
+            {
+                ventana.close();
+                return -1;
+            }
+
+            ///Opciones de Juego con mouse
+            else if (evento.type == Event::MouseButtonPressed)
+            {
+                Vector2i posicionMouse = Mouse::getPosition(ventana);
+
+                //Opcion 1 seleccionada
+                if(opcion1.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
+                {
+                    puntajeJugador1 = 0;
+                    puntajeJugador2 = 0;
+                    return 1;
+                }
+
+                //Opcion 2 seleccionada
+                else if(opcion2.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
+                {
+                    puntajeJugador1 = 0;
+                    puntajeJugador2 = 0;
+                    return 2;
+                }
+
+                //Opcion Salir seleccionada
+                else if(opcionSalir.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
+                {
+                    ventana.close();
+                    return -1;
+                }
+            }
+        }
+
+        ventana.clear();
+
+        ventana.draw(titulo);
+        ventana.draw(titulo1);
+        ventana.draw(titulo2);
+
+        ventana.draw(opcion1);
+        ventana.draw(opcion2);
+        ventana.draw(opcionSalir);
+
+        ventana.display();
+    }
+    return -1; // Se incluye para evitar advertencias del compilador
+}
+
+//Metodo Entrada Pausa
+void entradaPausa()
+{
+    Event evento;
+    while(ventana.pollEvent(evento))
+    {
+        if(evento.type == Event::Closed)
+            ventana.close();
+
+        //Pulsar P para pausar
+        if(evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+        {
+            pausado = !pausado;
+        }
+    }
+}
+
+//Metodo Pausar Juego
 void pausarJuego()
 {
     //Crear texto para los botones
     Font fuente;
+
     if(fuente.loadFromFile("Pixel-UniCode.ttf"))
     {
         Text reanudarText("Reanudar", fuente, 30);
         Text salirText("Salir", fuente, 30);
         Text reiniciarText("Reiniciar", fuente, 30);
     }
+
     Text reanudarText("Reanudar", fuente, 30);
     Text salirText("Salir", fuente, 30);
     Text reiniciarText("Reiniciar", fuente, 30);
@@ -132,17 +252,24 @@ void pausarJuego()
 
     //Detectar clics en los botones
     Vector2i mousePos = Mouse::getPosition(ventana);
-    if (Mouse::isButtonPressed(Mouse::Left)){
+    if (Mouse::isButtonPressed(Mouse::Left))
+    {
         //reanudar
-        if(reanudarText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+        if(reanudarText.getGlobalBounds().contains(mousePos.x, mousePos.y))
+        {
             pausado = false;
         }
         //salir
-        else if (salirText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
-            ventana.close();
+        else if (salirText.getGlobalBounds().contains(mousePos.x, mousePos.y))
+        {
+            //ventana.close();
+            pausado = false;
+            eleccionMenu = mostrarMenu();
+
         }
         //reiniciar
-        else if(reiniciarText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+        else if(reiniciarText.getGlobalBounds().contains(mousePos.x, mousePos.y))
+        {
             //logica de reinicio
             puntajeJugador1 = 0;
             puntajeJugador2 = 0;
@@ -151,7 +278,6 @@ void pausarJuego()
     }
 
 }
-
 
 //Metodo Renderiza Ventada Visual
 void renderizarVentana()
@@ -207,125 +333,6 @@ void renderizarVentana()
     ventana.display();
 }
 
-void entradaPausa()
-{
-    Event evento;
-    while(ventana.pollEvent(evento))
-    {
-        if(evento.type == Event::Closed)
-            ventana.close();
-
-        //Pulsar P para pausar
-        if(evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
-        {
-            pausado = !pausado;
-        }
-    }
-}
-
-
-// Función para manejar el menú de inicio
-int mostrarMenu()
-{
-    Font fuente;
-    if (!fuente.loadFromFile("Pixel-UniCode.ttf")) // Cambia el nombre del archivo según la fuente que uses
-    {
-        // Manejo del error al cargar la fuente
-        return -1;
-    }
-
-    /*// Cargar música de fondo
-    if (!musicaFondo.openFromFile("Musica_Fondo.ogg"))
-    {
-        // Manejo del error al cargar la música
-        return -1;
-    }
-
-    musicaFondo.setLoop(true); // Reproducir en bucle*/
-
-    //Membrete
-    //Titulo Proyecto Juego
-    Text titulo("Proyecto Juego Final", fuente, 30);
-    titulo.setPosition(ventana.getSize().x / 2 - titulo.getGlobalBounds().width / 2, 20);
-    titulo.setFillColor(Color::White);
-
-    //Titulo Grupo 2
-    Text titulo1("Grupo #2", fuente, 30);
-    titulo1.setPosition(ventana.getSize().x / 2 - titulo1.getGlobalBounds().width / 2, 50);
-    titulo1.setFillColor(Color::White);
-
-    //Titulo Pong
-    Text titulo2("JUEGO PONG", fuente, 100);
-    titulo2.setPosition(ventana.getSize().x / 2 - titulo2.getGlobalBounds().width / 2, 80);
-    titulo2.setFillColor(Color::Red);
-
-    //Boton Opcion 1 (1 VS 1)
-    Text opcion1("Jugar 1 vs 1", fuente, 30);
-    opcion1.setPosition(150, 300);
-    opcion1.setFillColor(Color::White);
-
-    //Boton Opcion 2 (1 VS BOT)
-    Text opcion2("Jugar 1 vs BOT", fuente, 30);
-    opcion2.setPosition(150, 350);
-    opcion2.setFillColor(Color::White);
-
-    //Boton Salir
-    Text opcionSalir("Salir", fuente, 30);
-    opcionSalir.setPosition(150, 400);
-    opcionSalir.setFillColor(Color::Red);
-
-    while (ventana.isOpen())
-    {
-        Event evento;
-        while (ventana.pollEvent(evento))
-        {
-            // Se cerró la ventana, terminar la ejecución
-            if (evento.type == Event::Closed)
-            {
-                ventana.close();
-                return -1;
-            }
-
-            ///Opciones de Juego con mouse
-            else if (evento.type == Event::MouseButtonPressed)
-            {
-                Vector2i posicionMouse = Mouse::getPosition(ventana);
-
-                //Opcion 1 seleccionada
-                if(opcion1.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
-                {
-                    return 1;
-                }
-
-                //Opcion 2 seleccionada
-                else if(opcion2.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
-                {
-                    return 2;
-                }
-
-                //Opcion Salir seleccionada
-                else if(opcionSalir.getGlobalBounds().contains(posicionMouse.x,posicionMouse.y))
-                {
-                    return -1;
-                }
-            }
-        }
-
-        ventana.clear();
-
-        ventana.draw(titulo);
-        ventana.draw(titulo1);
-        ventana.draw(titulo2);
-
-        ventana.draw(opcion1);
-        ventana.draw(opcion2);
-        ventana.draw(opcionSalir);
-
-        ventana.display();
-    }
-    return -1; // Se incluye para evitar advertencias del compilador
-}
-
 //Metodo para inicalizar Linea Punteada
 void inicializarLineaPunteada(vector<RectangleShape>& lineaPunteada, const RenderWindow& ventana)
 {
@@ -344,7 +351,7 @@ int main()
     //Inicializar Linea Punteda
     inicializarLineaPunteada(lineaPunteada, ventana);
 
-    int eleccionMenu = mostrarMenu();
+    eleccionMenu = mostrarMenu();
 
     //Jugar 1 vs 1
     if (eleccionMenu == 1)
@@ -369,8 +376,13 @@ int main()
             }
 
             ventana.clear();
-            moverPaletas();
-            moverPelota();
+
+            if (!pausado)
+            {
+                moverPaletas();
+                moverPelota();
+            }
+
             renderizarVentana();
         }
     }
@@ -397,22 +409,26 @@ int main()
                 }
             }
 
-            // Mover la paleta del jugador
-            moverPaletas();
-
-            // Mover la paleta del BOT (lógica simple, sigue la pelota)
-            if (pelota.getPosition().y < paleta2.getPosition().y && paleta2.getPosition().y > 0)
-            {
-                paleta2.move(0, -0.5);
-            }
-            else if (pelota.getPosition().y > paleta2.getPosition().y && paleta2.getPosition().y < ventana.getSize().y - paleta2.getSize().y)
-            {
-                paleta2.move(0, 0.5);
-            }
-
-            // Mover la pelota y renderizar la ventana
             ventana.clear();
-            moverPelota();
+            if (!pausado)
+            {
+                // Mover la paleta del jugador
+                moverPaletas();
+
+                // Mover la paleta del BOT (lógica simple, sigue la pelota)
+                if (pelota.getPosition().y < paleta2.getPosition().y && paleta2.getPosition().y > 0)
+                {
+                    paleta2.move(0, -0.5);
+                }
+                else if (pelota.getPosition().y > paleta2.getPosition().y && paleta2.getPosition().y < ventana.getSize().y - paleta2.getSize().y)
+                {
+                    paleta2.move(0, 0.5);
+                }
+
+                // Mover la pelota y renderizar la ventana
+                moverPelota();
+            }
+
             renderizarVentana();
         }
     }
