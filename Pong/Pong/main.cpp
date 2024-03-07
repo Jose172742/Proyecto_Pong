@@ -109,6 +109,31 @@ void pausarJuego()
     salirText.setPosition(ventana.getSize().x / 2 -50, 200);
     reiniciarText.setPosition(ventana.getSize().x / 2 -50, 200);
 
+    //Mostrar los botones en la ventana
+    ventana.draw(reanudarText);
+    ventana.draw(salirText);
+    ventana.draw(reiniciarText);
+
+    //Detectar clics en los botones
+    Vextor2i mousePos = Mouse::getPosition(ventana);
+    if (Mouse::isButtonPressed(Mouse::Left)){
+        //reanudar
+        if(reanudarText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+            pausado = false;
+        }
+        //salir
+        else if (salirText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+            ventana.close();
+        }
+        //reiniciar
+        else if(reiniciarText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+            //logica de reinicio
+            puntajeJugador1 = 0;
+            puntajeJugador2 = 0;
+            resetearPelota();
+        }
+    }
+
 }
 
 
