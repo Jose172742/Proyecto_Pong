@@ -1,16 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Audio/Music.hpp>
+/*#include <SFML/Audio.hpp>
+#include <SFML/Audio/Music.hpp>*/
 
 using namespace sf;
 using namespace std;
 
 //Declaracion Objetos Visuales
+
+
 RenderWindow ventana(VideoMode(1200, 750), "Pong");
 RectangleShape paleta1(Vector2f(15, 100));
 RectangleShape paleta2(Vector2f(15, 100));
 CircleShape pelota(10);
+
+RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
+//recuadro.setPosition(50, 70);
 
 //velocidad y direccion de pelota
 float velocidadPelota = 0.60f;
@@ -20,8 +25,8 @@ Vector2f velocidadPelotaVector(velocidadPelota, velocidadPelota);
 int puntajeJugador1 = 0;
 int puntajeJugador2 = 0;
 
-// Declaración de la música de fondo
-Music musicaFondo;
+/*// Declaración de la música de fondo
+Music musicaFondo;*/
 
 //Variable para controlar la pausa
 bool pausado = false;
@@ -29,26 +34,27 @@ bool pausado = false;
 //Metodo Movimiento Paletas
 void moverPaletas()
 {
-    if (Keyboard::isKeyPressed(Keyboard::W) && paleta1.getPosition().y > 0)
+    if (Keyboard::isKeyPressed(Keyboard::W) && paleta1.getPosition().y > recuadro.getPosition().y + 1)
     {
         paleta1.move(0, -1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::S) && paleta1.getPosition().y < ventana.getSize().y - paleta1.getSize().y)
+    if (Keyboard::isKeyPressed(Keyboard::S) && paleta1.getPosition().y + paleta1.getSize().y < recuadro.getPosition().y + recuadro.getSize().y - 1)
     {
         paleta1.move(0, 1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::Up) && paleta2.getPosition().y > 0)
+    if (Keyboard::isKeyPressed(Keyboard::Up) && paleta2.getPosition().y > recuadro.getPosition().y + 1)
     {
         paleta2.move(0, -1.0);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::Down) && paleta2.getPosition().y < ventana.getSize().y - paleta2.getSize().y)
+    if (Keyboard::isKeyPressed(Keyboard::Down) && paleta2.getPosition().y + paleta2.getSize().y < recuadro.getPosition().y + recuadro.getSize().y - 1)
     {
         paleta2.move(0, 1.0);
     }
 }
+
 
 //Metodo Resetear Pelota
 void resetearPelota()
@@ -64,28 +70,37 @@ void moverPelota()
     pelota.move(velocidadPelotaVector);
 
     // Colisiones con las paredes
-    if (pelota.getPosition().y <= 0 || pelota.getPosition().y >= ventana.getSize().y - pelota.getGlobalBounds().height)
+    if (pelota.getPosition().y <= recuadro.getPosition().y + 1 || pelota.getPosition().y >= recuadro.getPosition().y + recuadro.getSize().y - pelota.getGlobalBounds().height - 1)
     {
         velocidadPelotaVector.y = -velocidadPelotaVector.y;
     }
 
-    //Colision con paletas
-    if ((pelota.getGlobalBounds().intersects(paleta1.getGlobalBounds())) ||
-            (pelota.getGlobalBounds().intersects(paleta2.getGlobalBounds())))
+    // Colisión con paletas y limitación al recuadro
+    if (pelota.getPosition().x >= recuadro.getPosition().x &&
+            pelota.getPosition().x <= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
     {
-        velocidadPelotaVector.x = -velocidadPelotaVector.x;
+        if (pelota.getGlobalBounds().intersects(paleta1.getGlobalBounds()) ||
+                pelota.getGlobalBounds().intersects(paleta2.getGlobalBounds()))
+        {
+            velocidadPelotaVector.x = -velocidadPelotaVector.x;
+        }
+    }
+    else
+    {
+        resetearPelota();
     }
 
-    //Puntuacion y reseteo de pelota
-    if (pelota.getPosition().x <= 0)
+    // Puntuacion y reseteo de pelota
+    if (pelota.getPosition().x <= recuadro.getPosition().x)
     {
-        //Jugador 2
+        // Jugador 2
         puntajeJugador2++;
         resetearPelota();
     }
-    if (pelota.getPosition().x >= ventana.getSize().x - pelota.getGlobalBounds().width)
+
+    if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
     {
-        //Jugador 1
+        // Jugador 1
         puntajeJugador1++;
         resetearPelota();
     }
@@ -144,12 +159,21 @@ void renderizarVentana()
     ventana.clear();
 
     //Dibujar recuadro global
-    RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
+    //RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
     recuadro.setPosition(50, 70);
     recuadro.setOutlineThickness(1);
     recuadro.setOutlineColor(Color::White);
     recuadro.setFillColor(Color::Transparent);
     ventana.draw(recuadro);
+
+    // Ajustar posición de paletas dentro del recuadro
+    paleta1.setPosition(50, max(70.0f, min(ventana.getSize().y - 170.0f, paleta1.getPosition().y)));
+    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, max(70.0f, min(ventana.getSize().y - 170.0f, paleta2.getPosition().y)));
+
+// Ajustar posición de pelota dentro del recuadro
+    pelota.setPosition(max(50.0f, min(ventana.getSize().x - 50.0f, pelota.getPosition().x)),
+                       max(70.0f, min(ventana.getSize().y - 70.0f, pelota.getPosition().y)));
+
 
     ventana.draw(paleta1);
     ventana.draw(paleta2);
@@ -183,14 +207,14 @@ int mostrarMenu()
         return -1;
     }
 
-    // Cargar música de fondo
+    /*// Cargar música de fondo
     if (!musicaFondo.openFromFile("Musica_Fondo.ogg"))
     {
         // Manejo del error al cargar la música
         return -1;
     }
 
-    musicaFondo.setLoop(true); // Reproducir en bucle
+    musicaFondo.setLoop(true); // Reproducir en bucle*/
 
     //Membrete
     //Titulo Proyecto Juego
