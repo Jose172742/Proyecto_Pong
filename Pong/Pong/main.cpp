@@ -13,7 +13,7 @@ RectangleShape paleta2(Vector2f(15, 100));
 CircleShape pelota(10);
 
 RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
-
+vector<RectangleShape> lineaPunteada;
 
 //velocidad y direccion de pelota
 float velocidadPelota = 0.60f;
@@ -160,12 +160,17 @@ void renderizarVentana()
     ventana.clear();
 
     //Dibujar recuadro global
-    //RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
     recuadro.setPosition(50, 70);
     recuadro.setOutlineThickness(1);
     recuadro.setOutlineColor(Color::White);
     recuadro.setFillColor(Color::Transparent);
     ventana.draw(recuadro);
+
+    //Dibujar linea punteada
+    for (auto& rect : lineaPunteada)
+    {
+        ventana.draw(rect);
+    }
 
     // Ajustar posición de paletas dentro del recuadro
     paleta1.setPosition(50, max(70.0f, min(ventana.getSize().y - 170.0f, paleta1.getPosition().y)));
@@ -321,9 +326,24 @@ int mostrarMenu()
     return -1; // Se incluye para evitar advertencias del compilador
 }
 
+//Metodo para inicalizar Linea Punteada
+void inicializarLineaPunteada(vector<RectangleShape>& lineaPunteada, const RenderWindow& ventana)
+{
+    for (int i = 0; i <= (ventana.getSize().y - 140) / 20; i++)
+    {
+        RectangleShape rect(Vector2f(2, 10));
+        rect.setPosition(ventana.getSize().x / 2, 70 + i * 20);
+        rect.setFillColor(Color::White);
+        lineaPunteada.push_back(rect);
+    }
+}
+
 //Metodo Principal(Ejecutar)
 int main()
 {
+    //Inicializar Linea Punteda
+    inicializarLineaPunteada(lineaPunteada, ventana);
+
     int eleccionMenu = mostrarMenu();
 
     //Jugar 1 vs 1
@@ -331,6 +351,7 @@ int main()
     {
         paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
         paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
+        resetearPelota();
 
         while (ventana.isOpen())
         {
@@ -359,6 +380,7 @@ int main()
     {
         paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
         paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
+        resetearPelota();
 
         while (ventana.isOpen())
         {
