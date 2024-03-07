@@ -91,6 +91,26 @@ void moverPelota()
     }
 }
 
+void pausarJuego()
+{
+    //Crear texto para los botones
+    Font fuente;
+    if(fuente.loadFromFile("Pixel-UniCode.ttf")){
+        Text reanudarText("Reanudar", fuente, 30);
+        Text salirText("Salir", fuente, 30);
+        Text reiniciarText("Reiniciar", fuente, 30);
+    }
+    Text reanudarText("Reanudar", fuente, 30);
+    Text salirText("Salir", fuente, 30);
+    Text reiniciarText("Reiniciar", fuente, 30);
+
+    //Posicion de los botones en la ventana
+    reanudarText.setPosition(ventana.getSize().x / 2 -50, 200);
+    salirText.setPosition(ventana.getSize().x / 2 -50, 200);
+    reiniciarText.setPosition(ventana.getSize().x / 2 -50, 200);
+
+}
+
 
 //Metodo Renderiza Ventada Visual
 void renderizarVentana()
