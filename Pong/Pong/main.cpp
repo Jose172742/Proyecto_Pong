@@ -338,8 +338,15 @@ int main()
             {
                 if (evento.type == Event::Closed)
                     ventana.close();
+
+                //P para pausar
+                if (evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+                {
+                    pausado = !pausado;
+                }
             }
 
+            ventana.clear();
             moverPaletas();
             moverPelota();
             renderizarVentana();
