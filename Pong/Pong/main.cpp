@@ -1,13 +1,12 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
-#include <iostream>
 
 using namespace sf;
 using namespace std;
 
 //Declaraciones Globales
-//Declaracion Objetos Visuales
 RenderWindow ventana(VideoMode(1200, 750), "Pong");
 RectangleShape paleta1(Vector2f(15, 100));
 RectangleShape paleta2(Vector2f(15, 100));
@@ -114,8 +113,11 @@ int mostrarMenu()
     opcionSalir.setPosition(150, 400);
     opcionSalir.setFillColor(Color::Red);
 
+
     while (ventana.isOpen())
     {
+        pausado = false;
+
         Event evento;
         while (ventana.pollEvent(evento))
         {
@@ -168,7 +170,7 @@ int mostrarMenu()
 
         ventana.display();
     }
-    return -1; // Se incluye para evitar advertencias del compilador
+    return eleccionMenu; // Se incluye para evitar advertencias del compilador
 }
 
 //Metodo Movimiento Pelota
@@ -203,13 +205,17 @@ void moverPelota()
             puntajeJugador2++;
             resetearPelota();
             sonidoPunto.play(); // Reproducir sonido "punto"
-            if (puntajeJugador2 >= 5) {
+
+
+            if (puntajeJugador2 >= 5)
+            {
                 // Reiniciar juego y mostrar menú
                 puntajeJugador1 = 0;
                 puntajeJugador2 = 0;
                 eleccionMenu = mostrarMenu();
                 resetearPelota();
             }
+
         }
 
         if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
@@ -218,13 +224,17 @@ void moverPelota()
             puntajeJugador1++;
             resetearPelota();
             sonidoPunto.play(); // Reproducir sonido "punto"
-            if (puntajeJugador1 >= 5) {
+
+
+            if (puntajeJugador1 >= 5)
+            {
                 // Reiniciar juego y mostrar menú
                 puntajeJugador1 = 0;
                 puntajeJugador2 = 0;
                 eleccionMenu = mostrarMenu();
                 resetearPelota();
             }
+
         }
     }
 }
@@ -370,24 +380,102 @@ void inicializarLineaPunteada(vector<RectangleShape>& lineaPunteada, const Rende
     }
 }
 
+int pantallaGanador(int jugadorGanador)
+{
+    Font fuente;
+    if (!fuente.loadFromFile("Pixel-UniCode.ttf"))
+    {
+        // Manejo del error al cargar la fuente
+        return -1;
+    }
+
+    Text ganadorText("GANO JUGADOR " + to_string(jugadorGanador), fuente, 40);
+    ganadorText.setPosition(ventana.getSize().x / 2 - ganadorText.getGlobalBounds().width / 2, 200);
+    ganadorText.setFillColor(Color::White);
+
+    Text menuText("MENU", fuente, 30);
+    menuText.setPosition(ventana.getSize().x / 2 - 50, 300);
+    menuText.setFillColor(Color::White);
+
+    Text salirText("SALIR", fuente, 30);
+    salirText.setPosition(ventana.getSize().x / 2 - 50, 350);
+    salirText.setFillColor(Color::Red);
+
+    while (ventana.isOpen())
+    {
+        Event evento;
+        while (ventana.pollEvent(evento))
+        {
+            if (evento.type == Event::Closed)
+            {
+                ventana.close();
+                return -1;
+            }
+
+            // Opciones de menú con mouse
+            else if (evento.type == Event::MouseButtonPressed)
+            {
+                Vector2i posicionMouse = Mouse::getPosition(ventana);
+
+                // Regresar al menú
+                if (menuText.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
+                {
+                    // Restablecer variables
+                    puntajeJugador1 = 0;
+                    puntajeJugador2 = 0;
+                    eleccionMenu = mostrarMenu();
+                    resetearPelota();
+                    return eleccionMenu;
+                }
+
+                // Salir del juego
+                else if (salirText.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
+                {
+                    ventana.close();
+                    return -1;
+                }
+            }
+        }
+
+        ventana.clear();
+        ventana.draw(ganadorText);
+        ventana.draw(menuText);
+        ventana.draw(salirText);
+        ventana.display();
+    }
+
+    // Reset game state before returning
+    puntajeJugador1 = 0;
+    puntajeJugador2 = 0;
+    resetearPelota();
+
+    return -1; // Se incluye para evitar advertencias del compilador
+}
+
+
 //Metodo Principal(Ejecutar)
 int main()
 {
     Music musicaFondo;
     // Cargar la música de fondo
-    if (!musicaFondo.openFromFile("Musica_Fondo.ogg")) {
+    if (!musicaFondo.openFromFile("Musica_Fondo.ogg"))
+    {
         cerr << "Error al cargar el archivo de música." << endl;
         return -1;
     }
+
+    musicaFondo.setVolume(5);
     musicaFondo.setLoop(true); // Reproducir en bucle
     musicaFondo.play();
 
     // Cargar sonidos
-    if (!bufferPong.loadFromFile("SonidoPelota.ogg")) {
+    if (!bufferPong.loadFromFile("SonidoPelota.ogg"))
+    {
         cerr << "Error al cargar el archivo de sonido 'SonidoPelota.ogg'." << endl;
         return -1;
     }
-    if (!bufferPunto.loadFromFile("SonidoPunto.ogg")) {
+    if (!bufferPunto.loadFromFile("SonidoPunto.ogg"))
+    {
         cerr << "Error al cargar el archivo de sonido 'SonidoPunto.ogg'." << endl;
         return -1;
     }
@@ -425,19 +513,27 @@ int main()
 
             ventana.clear();
 
+
             if (!pausado)
             {
                 moverPaletas();
                 moverPelota();
             }
 
+
             renderizarVentana();
 
-            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5) {
-                puntajeJugador1 = 0;
-                puntajeJugador2 = 0;
-                eleccionMenu = mostrarMenu();
-                resetearPelota();
+
+            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5)
+            {
+                eleccionMenu = pantallaGanador((puntajeJugador1 >= 5) ? 1 : 2);
+
+                if (eleccionMenu != -1)
+                {
+                    puntajeJugador1 = 0;
+                    puntajeJugador2 = 0;
+                    resetearPelota();
+                }
             }
         }
     }
@@ -486,12 +582,19 @@ int main()
 
             renderizarVentana();
 
-            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5) {
-                puntajeJugador1 = 0;
-                puntajeJugador2 = 0;
-                eleccionMenu = mostrarMenu();
-                resetearPelota();
+
+            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5)
+            {
+                eleccionMenu = pantallaGanador((puntajeJugador1 >= 5) ? 1 : 2);
+
+                if (eleccionMenu != -1)
+                {
+                    puntajeJugador1 = 0;
+                    puntajeJugador2 = 0;
+                    resetearPelota();
+                }
             }
+
         }
     }
 
