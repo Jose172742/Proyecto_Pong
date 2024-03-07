@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1709854711 source:c:\users\joses\onedrive\documentos\github\proyecto_pong\pong\pong\main.cpp
+1709854830 source:c:\users\joses\onedrive\documentos\github\proyecto_pong\pong\pong\main.cpp
 	<iostream>
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
