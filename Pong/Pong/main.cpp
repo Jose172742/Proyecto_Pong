@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Audio/Music.hpp>
 
 using namespace sf;
 using namespace std;
