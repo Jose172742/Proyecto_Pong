@@ -23,6 +23,9 @@ int puntajeJugador2 = 0;
 // Declaración de la música de fondo
 Music musicaFondo;
 
+//Variable para controlar la pausa
+bool pausado = false;
+
 //Metodo Movimiento Paletas
 void moverPaletas()
 {
