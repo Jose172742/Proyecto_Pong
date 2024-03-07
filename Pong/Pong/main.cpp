@@ -28,6 +28,9 @@ int puntajeJugador2 = 0;
 /*// Declaración de la música de fondo
 Music musicaFondo;*/
 
+//Variable para controlar la pausa
+bool pausado = false;
+
 //Metodo Movimiento Paletas
 void moverPaletas()
 {
@@ -101,6 +104,26 @@ void moverPelota()
         puntajeJugador1++;
         resetearPelota();
     }
+}
+
+void pausarJuego()
+{
+    //Crear texto para los botones
+    Font fuente;
+    if(fuente.loadFromFile("Pixel-UniCode.ttf")){
+        Text reanudarText("Reanudar", fuente, 30);
+        Text salirText("Salir", fuente, 30);
+        Text reiniciarText("Reiniciar", fuente, 30);
+    }
+    Text reanudarText("Reanudar", fuente, 30);
+    Text salirText("Salir", fuente, 30);
+    Text reiniciarText("Reiniciar", fuente, 30);
+
+    //Posicion de los botones en la ventana
+    reanudarText.setPosition(ventana.getSize().x / 2 -50, 200);
+    salirText.setPosition(ventana.getSize().x / 2 -50, 200);
+    reiniciarText.setPosition(ventana.getSize().x / 2 -50, 200);
+
 }
 
 
