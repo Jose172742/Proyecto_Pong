@@ -1,7 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-/*#include <SFML/Audio.hpp>
-#include <SFML/Audio/Music.hpp>*/
 
 using namespace sf;
 using namespace std;
@@ -28,6 +26,9 @@ Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 
 //Variable para controlar la pausa
 bool pausado = false;
+
+//Puntaje para ganar
+int puntajeParaGanar = 5;
 ///
 
 //Metodo Movimiento Paletas
@@ -277,6 +278,22 @@ void pausarJuego()
         }
     }
 
+    if (pausado && (puntajeJugador1 >= puntajeParaGanar || puntajeJugador2 >= puntajeParaGanar))
+    {
+        Text mensajeVictoria;
+        if (puntajeJugador1 >= puntajeParaGanar)
+        {
+            mensajeVictoria.setString("GANO JUGADOR 1");
+        }
+        else
+        {
+            mensajeVictoria.setString("GANO JUGADOR 2");
+        }
+        mensajeVictoria.setFont(fuente);
+        mensajeVictoria.setCharacterSize(30);
+        mensajeVictoria.setPosition(ventana.getSize().x / 2 - mensajeVictoria.getGlobalBounds().width / 2, 100);
+        ventana.draw(mensajeVictoria);
+    }
 }
 
 //Metodo Renderiza Ventada Visual
@@ -381,6 +398,11 @@ int main()
             {
                 moverPaletas();
                 moverPelota();
+                if (puntajeJugador1 >= puntajeParaGanar || puntajeJugador2 >= puntajeParaGanar)
+                {
+                    pausado = true;
+                }
+
             }
 
             renderizarVentana();
@@ -427,6 +449,11 @@ int main()
 
                 // Mover la pelota y renderizar la ventana
                 moverPelota();
+                if (puntajeJugador1 >= puntajeParaGanar || puntajeJugador2 >= puntajeParaGanar)
+                {
+                    pausado = true;
+                }
+
             }
 
             renderizarVentana();
