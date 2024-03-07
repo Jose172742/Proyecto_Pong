@@ -121,8 +121,8 @@ void pausarJuego()
 
     //Posicion de los botones en la ventana
     reanudarText.setPosition(ventana.getSize().x / 2 -50, 200);
-    salirText.setPosition(ventana.getSize().x / 2 -50, 200);
-    reiniciarText.setPosition(ventana.getSize().x / 2 -50, 200);
+    salirText.setPosition(ventana.getSize().x / 2 -50, 250);
+    reiniciarText.setPosition(ventana.getSize().x / 2 -50, 300);
 
     //Mostrar los botones en la ventana
     ventana.draw(reanudarText);
@@ -130,7 +130,7 @@ void pausarJuego()
     ventana.draw(reiniciarText);
 
     //Detectar clics en los botones
-    Vextor2i mousePos = Mouse::getPosition(ventana);
+    Vector2i mousePos = Mouse::getPosition(ventana);
     if (Mouse::isButtonPressed(Mouse::Left)){
         //reanudar
         if(reanudarText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
@@ -206,7 +206,7 @@ void entradaPausa()
     Event evento;
     while(ventana.pollEvent(evento))
     {
-        if(evento,type == Event::Closed)
+        if(evento.type == Event::Closed)
             ventana.close();
 
         //Pulsar P para pausar
