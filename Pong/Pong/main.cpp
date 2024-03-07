@@ -1,7 +1,7 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
-#include <iostream>
 
 using namespace sf;
 using namespace std;
@@ -114,8 +114,11 @@ int mostrarMenu()
     opcionSalir.setPosition(150, 400);
     opcionSalir.setFillColor(Color::Red);
 
+
     while (ventana.isOpen())
     {
+        pausado = false;
+
         Event evento;
         while (ventana.pollEvent(evento))
         {
@@ -168,7 +171,7 @@ int mostrarMenu()
 
         ventana.display();
     }
-    return -1; // Se incluye para evitar advertencias del compilador
+    return eleccionMenu; // Se incluye para evitar advertencias del compilador
 }
 
 //Metodo Movimiento Pelota
@@ -203,13 +206,17 @@ void moverPelota()
             puntajeJugador2++;
             resetearPelota();
             sonidoPunto.play(); // Reproducir sonido "punto"
-            if (puntajeJugador2 >= 5) {
+
+            /*
+            if (puntajeJugador2 >= 5)
+            {
                 // Reiniciar juego y mostrar menú
                 puntajeJugador1 = 0;
                 puntajeJugador2 = 0;
                 eleccionMenu = mostrarMenu();
                 resetearPelota();
             }
+            */
         }
 
         if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
@@ -218,13 +225,17 @@ void moverPelota()
             puntajeJugador1++;
             resetearPelota();
             sonidoPunto.play(); // Reproducir sonido "punto"
-            if (puntajeJugador1 >= 5) {
+
+            /*
+            if (puntajeJugador1 >= 5)
+            {
                 // Reiniciar juego y mostrar menú
                 puntajeJugador1 = 0;
                 puntajeJugador2 = 0;
                 eleccionMenu = mostrarMenu();
                 resetearPelota();
             }
+            */
         }
     }
 }
@@ -425,20 +436,25 @@ int main()
 
             ventana.clear();
 
+
             if (!pausado)
             {
                 moverPaletas();
                 moverPelota();
             }
 
+
             renderizarVentana();
 
-            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5) {
+            /*
+            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5)
+            {
                 puntajeJugador1 = 0;
                 puntajeJugador2 = 0;
                 eleccionMenu = mostrarMenu();
                 resetearPelota();
             }
+            */
         }
     }
 
@@ -486,12 +502,15 @@ int main()
 
             renderizarVentana();
 
-            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5) {
+            /*
+            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5)
+            {
                 puntajeJugador1 = 0;
                 puntajeJugador2 = 0;
                 eleccionMenu = mostrarMenu();
                 resetearPelota();
             }
+            */
         }
     }
 
