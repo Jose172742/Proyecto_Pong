@@ -7,15 +7,13 @@ using namespace sf;
 using namespace std;
 
 //Declaracion Objetos Visuales
-
-
 RenderWindow ventana(VideoMode(1200, 750), "Pong");
 RectangleShape paleta1(Vector2f(15, 100));
 RectangleShape paleta2(Vector2f(15, 100));
 CircleShape pelota(10);
 
 RectangleShape recuadro(Vector2f(ventana.getSize().x - 100, ventana.getSize().y - 140));
-//recuadro.setPosition(50, 70);
+
 
 //velocidad y direccion de pelota
 float velocidadPelota = 0.60f;
@@ -59,7 +57,10 @@ void moverPaletas()
 //Metodo Resetear Pelota
 void resetearPelota()
 {
-    pelota.setPosition(ventana.getSize().x / 2 - pelota.getRadius(), ventana.getSize().y / 2 - pelota.getRadius());
+    float posX = recuadro.getPosition().x + recuadro.getSize().x / 2 - pelota.getRadius();
+    float posY = recuadro.getPosition().y + recuadro.getSize().y / 2 - pelota.getRadius();
+
+    pelota.setPosition(posX, posY);
     velocidadPelotaVector.x = velocidadPelota;
     velocidadPelotaVector.y = velocidadPelota;
 }
@@ -87,22 +88,20 @@ void moverPelota()
     }
     else
     {
-        resetearPelota();
-    }
+        // Puntuacion y reseteo de pelota
+        if (pelota.getPosition().x <= recuadro.getPosition().x)
+        {
+            // Jugador 2
+            puntajeJugador2++;
+            resetearPelota();
+        }
 
-    // Puntuacion y reseteo de pelota
-    if (pelota.getPosition().x <= recuadro.getPosition().x)
-    {
-        // Jugador 2
-        puntajeJugador2++;
-        resetearPelota();
-    }
-
-    if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
-    {
-        // Jugador 1
-        puntajeJugador1++;
-        resetearPelota();
+        if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
+        {
+            // Jugador 1
+            puntajeJugador1++;
+            resetearPelota();
+        }
     }
 }
 
@@ -110,7 +109,8 @@ void pausarJuego()
 {
     //Crear texto para los botones
     Font fuente;
-    if(fuente.loadFromFile("Pixel-UniCode.ttf")){
+    if(fuente.loadFromFile("Pixel-UniCode.ttf"))
+    {
         Text reanudarText("Reanudar", fuente, 30);
         Text salirText("Salir", fuente, 30);
         Text reiniciarText("Reiniciar", fuente, 30);
@@ -145,7 +145,7 @@ void renderizarVentana()
     paleta1.setPosition(50, max(70.0f, min(ventana.getSize().y - 170.0f, paleta1.getPosition().y)));
     paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, max(70.0f, min(ventana.getSize().y - 170.0f, paleta2.getPosition().y)));
 
-// Ajustar posición de pelota dentro del recuadro
+    // Ajustar posición de pelota dentro del recuadro
     pelota.setPosition(max(50.0f, min(ventana.getSize().x - 50.0f, pelota.getPosition().x)),
                        max(70.0f, min(ventana.getSize().y - 70.0f, pelota.getPosition().y)));
 
