@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 
 using namespace sf;
 using namespace std;
@@ -17,6 +18,9 @@ Vector2f velocidadPelotaVector(velocidadPelota, velocidadPelota);
 //puntuacion de cada jugador
 int puntajeJugador1 = 0;
 int puntajeJugador2 = 0;
+
+// Declaración de la música de fondo
+Music musicaFondo;
 
 //Metodo Movimiento Paletas
 void moverPaletas()
@@ -130,7 +134,16 @@ int mostrarMenu()
         return -1;
     }
 
-    ///Membrete
+    // Cargar música de fondo
+    if (!musicaFondo.openFromFile("Musica_Fondo.ogg"))
+    {
+        // Manejo del error al cargar la música
+        return -1;
+    }
+
+    musicaFondo.setLoop(true); // Reproducir en bucle
+
+    //Membrete
     //Titulo Proyecto Juego
     Text titulo("Proyecto Juego Final", fuente, 30);
     titulo.setPosition(ventana.getSize().x / 2 - titulo.getGlobalBounds().width / 2, 20);
