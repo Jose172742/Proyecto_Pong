@@ -124,6 +124,31 @@ void pausarJuego()
     salirText.setPosition(ventana.getSize().x / 2 -50, 200);
     reiniciarText.setPosition(ventana.getSize().x / 2 -50, 200);
 
+    //Mostrar los botones en la ventana
+    ventana.draw(reanudarText);
+    ventana.draw(salirText);
+    ventana.draw(reiniciarText);
+
+    //Detectar clics en los botones
+    Vextor2i mousePos = Mouse::getPosition(ventana);
+    if (Mouse::isButtonPressed(Mouse::Left)){
+        //reanudar
+        if(reanudarText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+            pausado = false;
+        }
+        //salir
+        else if (salirText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+            ventana.close();
+        }
+        //reiniciar
+        else if(reiniciarText.getGlobalBounds().contains(mousePos.x, mousePos.y)){
+            //logica de reinicio
+            puntajeJugador1 = 0;
+            puntajeJugador2 = 0;
+            resetearPelota();
+        }
+    }
+
 }
 
 
@@ -168,9 +193,30 @@ void renderizarVentana()
         textoPuntaje2.setPosition(3 * ventana.getSize().x / 4 - 25, 5);
         ventana.draw(textoPuntaje2);
     }
+    if(pausado)
+    {
+        pausarJuego();
+    }
 
     ventana.display();
 }
+
+void entradaPausa()
+{
+    Event evento;
+    while(ventana.pollEvent(evento))
+    {
+        if(evento,type == Event::Closed)
+            ventana.close();
+
+        //Pulsar P para pausar
+        if(evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+        {
+            pausado = !pausado;
+        }
+    }
+}
+
 
 // Función para manejar el menú de inicio
 int mostrarMenu()
@@ -292,8 +338,15 @@ int main()
             {
                 if (evento.type == Event::Closed)
                     ventana.close();
+
+                //P para pausar
+                if (evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+                {
+                    pausado = !pausado;
+                }
             }
 
+            ventana.clear();
             moverPaletas();
             moverPelota();
             renderizarVentana();
@@ -313,6 +366,12 @@ int main()
             {
                 if (evento.type == Event::Closed)
                     ventana.close();
+
+                //P para pausar
+                if (evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+                {
+                    pausado = !pausado;
+                }
             }
 
             // Mover la paleta del jugador
@@ -329,6 +388,7 @@ int main()
             }
 
             // Mover la pelota y renderizar la ventana
+            ventana.clear();
             moverPelota();
             renderizarVentana();
         }
