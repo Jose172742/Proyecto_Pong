@@ -1,12 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-/*#include <SFML/Audio.hpp>
-#include <SFML/Audio/Music.hpp>*/
+#include <SFML/Audio.hpp>
+#include <iostream>
 
 using namespace sf;
 using namespace std;
 
-///Declaraciones Globales
+//Declaraciones Globales
 //Declaracion Objetos Visuales
 RenderWindow ventana(VideoMode(1200, 750), "Pong");
 RectangleShape paleta1(Vector2f(15, 100));
@@ -28,7 +28,12 @@ Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 
 //Variable para controlar la pausa
 bool pausado = false;
-///
+
+// Sonidos
+SoundBuffer bufferPong;
+SoundBuffer bufferPunto;
+Sound sonidoPong;
+Sound sonidoPunto;
 
 //Metodo Movimiento Paletas
 void moverPaletas()
@@ -65,46 +70,6 @@ void resetearPelota()
 
     velocidadPelotaVector.x = velocidadPelota;
     velocidadPelotaVector.y = -velocidadPelota;
-}
-
-//Metodo Movimiento Pelota
-void moverPelota()
-{
-    pelota.move(velocidadPelotaVector);
-
-    // Colisiones con las paredes
-    if (pelota.getPosition().y <= recuadro.getPosition().y + 1 || pelota.getPosition().y >= recuadro.getPosition().y + recuadro.getSize().y - pelota.getGlobalBounds().height - 1)
-    {
-        velocidadPelotaVector.y = -velocidadPelotaVector.y;
-    }
-
-    // Colisión con paletas y limitación al recuadro
-    if (pelota.getPosition().x >= recuadro.getPosition().x &&
-            pelota.getPosition().x <= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
-    {
-        if (pelota.getGlobalBounds().intersects(paleta1.getGlobalBounds()) ||
-                pelota.getGlobalBounds().intersects(paleta2.getGlobalBounds()))
-        {
-            velocidadPelotaVector.x = -velocidadPelotaVector.x;
-        }
-    }
-    else
-    {
-        // Puntuacion y reseteo de pelota
-        if (pelota.getPosition().x <= recuadro.getPosition().x)
-        {
-            // Jugador 2
-            puntajeJugador2++;
-            resetearPelota();
-        }
-
-        if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
-        {
-            // Jugador 1
-            puntajeJugador1++;
-            resetearPelota();
-        }
-    }
 }
 
 // Función para manejar el menú de inicio
@@ -205,6 +170,66 @@ int mostrarMenu()
     }
     return -1; // Se incluye para evitar advertencias del compilador
 }
+
+//Metodo Movimiento Pelota
+void moverPelota()
+{
+    pelota.move(velocidadPelotaVector);
+
+    // Colisiones con las paredes
+    if (pelota.getPosition().y <= recuadro.getPosition().y + 1 || pelota.getPosition().y >= recuadro.getPosition().y + recuadro.getSize().y - pelota.getGlobalBounds().height - 1)
+    {
+        velocidadPelotaVector.y = -velocidadPelotaVector.y;
+        sonidoPong.play(); // Reproducir sonido "pong"
+    }
+
+    // Colisión con paletas y limitación al recuadro
+    if (pelota.getPosition().x >= recuadro.getPosition().x &&
+            pelota.getPosition().x <= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
+    {
+        if (pelota.getGlobalBounds().intersects(paleta1.getGlobalBounds()) ||
+                pelota.getGlobalBounds().intersects(paleta2.getGlobalBounds()))
+        {
+            velocidadPelotaVector.x = -velocidadPelotaVector.x;
+            sonidoPong.play(); // Reproducir sonido "pong"
+        }
+    }
+    else
+    {
+        // Puntuacion y reseteo de pelota
+        if (pelota.getPosition().x <= recuadro.getPosition().x)
+        {
+            // Jugador 2
+            puntajeJugador2++;
+            resetearPelota();
+            sonidoPunto.play(); // Reproducir sonido "punto"
+            if (puntajeJugador2 >= 5) {
+                // Reiniciar juego y mostrar menú
+                puntajeJugador1 = 0;
+                puntajeJugador2 = 0;
+                eleccionMenu = mostrarMenu();
+                resetearPelota();
+            }
+        }
+
+        if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
+        {
+            // Jugador 1
+            puntajeJugador1++;
+            resetearPelota();
+            sonidoPunto.play(); // Reproducir sonido "punto"
+            if (puntajeJugador1 >= 5) {
+                // Reiniciar juego y mostrar menú
+                puntajeJugador1 = 0;
+                puntajeJugador2 = 0;
+                eleccionMenu = mostrarMenu();
+                resetearPelota();
+            }
+        }
+    }
+}
+
+
 
 //Metodo Entrada Pausa
 void entradaPausa()
@@ -348,6 +373,29 @@ void inicializarLineaPunteada(vector<RectangleShape>& lineaPunteada, const Rende
 //Metodo Principal(Ejecutar)
 int main()
 {
+    Music musicaFondo;
+    // Cargar la música de fondo
+    if (!musicaFondo.openFromFile("Musica_Fondo.ogg")) {
+        cerr << "Error al cargar el archivo de música." << endl;
+        return -1;
+    }
+    musicaFondo.setLoop(true); // Reproducir en bucle
+    musicaFondo.play();
+
+    // Cargar sonidos
+    if (!bufferPong.loadFromFile("SonidoPelota.ogg")) {
+        cerr << "Error al cargar el archivo de sonido 'SonidoPelota.ogg'." << endl;
+        return -1;
+    }
+    if (!bufferPunto.loadFromFile("SonidoPunto.ogg")) {
+        cerr << "Error al cargar el archivo de sonido 'SonidoPunto.ogg'." << endl;
+        return -1;
+    }
+
+    // Asignar buffers de sonido a sonidos
+    sonidoPong.setBuffer(bufferPong);
+    sonidoPunto.setBuffer(bufferPunto);
+
     //Inicializar Linea Punteda
     inicializarLineaPunteada(lineaPunteada, ventana);
 
@@ -384,6 +432,13 @@ int main()
             }
 
             renderizarVentana();
+
+            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5) {
+                puntajeJugador1 = 0;
+                puntajeJugador2 = 0;
+                eleccionMenu = mostrarMenu();
+                resetearPelota();
+            }
         }
     }
 
@@ -430,6 +485,13 @@ int main()
             }
 
             renderizarVentana();
+
+            if (puntajeJugador1 >= 5 || puntajeJugador2 >= 5) {
+                puntajeJugador1 = 0;
+                puntajeJugador2 = 0;
+                eleccionMenu = mostrarMenu();
+                resetearPelota();
+            }
         }
     }
 
