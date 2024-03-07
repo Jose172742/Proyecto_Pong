@@ -366,6 +366,12 @@ int main()
             {
                 if (evento.type == Event::Closed)
                     ventana.close();
+
+                //P para pausar
+                if (evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+                {
+                    pausado = !pausado;
+                }
             }
 
             // Mover la paleta del jugador
@@ -382,6 +388,7 @@ int main()
             }
 
             // Mover la pelota y renderizar la ventana
+            ventana.clear();
             moverPelota();
             renderizarVentana();
         }
