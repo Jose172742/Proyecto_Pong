@@ -28,8 +28,10 @@ Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 // Sonidos
 SoundBuffer bufferPong;
 SoundBuffer bufferPunto;
+SoundBuffer bufferGanar;
 Sound sonidoPong;
 Sound sonidoPunto;
+Sound sonidoGanar;
 
 bool pausaJuego1 = false;
 
@@ -227,16 +229,17 @@ void manejarPausa()
 // Metodo Movimiento Pelota
 void moverPelota()
 {
+    // Movimiento de la pelota y detección de colisiones
     pelota.move(velocidadPelotaVector);
 
-    // Colisiones con las paredes
+    // Colisiones con las paredes superior e inferior
     if (pelota.getPosition().y <= recuadro.getPosition().y + 1 || pelota.getPosition().y >= recuadro.getPosition().y + recuadro.getSize().y - pelota.getGlobalBounds().height - 1)
     {
         velocidadPelotaVector.y = -velocidadPelotaVector.y;
         sonidoPong.play(); // Reproducir sonido "pong"
     }
 
-    // Colisión con paletas y limitación al recuadro
+    // Colisión con las paletas
     if (pelota.getPosition().x >= recuadro.getPosition().x &&
             pelota.getPosition().x <= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
     {
@@ -249,10 +252,9 @@ void moverPelota()
     }
     else
     {
-        // Puntuación y reseteo de pelota
+        // Puntuación y reseteo de la pelota
         if (pelota.getPosition().x <= recuadro.getPosition().x)
         {
-            // Jugador 2
             puntajeJugador2++;
             resetearPelota();
             sonidoPunto.play(); // Reproducir sonido "punto"
@@ -260,10 +262,61 @@ void moverPelota()
 
         if (pelota.getPosition().x >= recuadro.getPosition().x + recuadro.getSize().x - pelota.getGlobalBounds().width)
         {
-            // Jugador 1
             puntajeJugador1++;
             resetearPelota();
             sonidoPunto.play(); // Reproducir sonido "punto"
+        }
+    }
+
+    // Verificar si algún jugador ha llegado a 5 puntos
+    if (puntajeJugador1 == 5 || puntajeJugador2 == 5)
+    {
+        sonidoGanar.play();
+
+        // Mostrar resultado en una ventana emergente
+        RenderWindow resultadoVentana(VideoMode(400, 200), "Resultado", Style::Close);
+
+        string mensajeResultado;
+        if (puntajeJugador1 == 5)
+            mensajeResultado = "¡El jugador 1  ha ganado!";
+        else
+            mensajeResultado = "¡El jugador 2  ha ganado!";
+
+        Font fuenteResultado;
+        if (!fuenteResultado.loadFromFile("Pixel-UniCode.ttf"))
+        {
+            // Manejar el error de carga de fuente
+            return;
+        }
+
+        Text textoResultado(mensajeResultado, fuenteResultado, 40);
+        textoResultado.setPosition(50, 50);
+        textoResultado.setFillColor(Color::White);
+
+        while (resultadoVentana.isOpen())
+        {
+            Event eventoResultado;
+            while (resultadoVentana.pollEvent(eventoResultado))
+            {
+                if (eventoResultado.type == Event::Closed)
+                    resultadoVentana.close();
+                else if (eventoResultado.type == Event::MouseButtonPressed)
+                    resultadoVentana.close(); // Cerrar la ventana al hacer clic
+            }
+
+            resultadoVentana.clear();
+            resultadoVentana.draw(textoResultado);
+            resultadoVentana.display();
+        }
+
+        // Reiniciar el juego
+        eleccionMenu = mostrarMenu();
+        if (eleccionMenu != -1)
+        {
+            puntajeJugador1 = 0;
+            puntajeJugador2 = 0;
+            resetearPelota();
+            return;
         }
     }
 }
@@ -404,10 +457,16 @@ int main()
         cerr << "Error al cargar el archivo de sonido 'SonidoPunto.ogg'." << endl;
         return -1;
     }
+    if (!bufferGanar.loadFromFile("Win.ogg"))
+    {
+        cerr << "Error al cargar el archivo de sonido 'Win.ogg'." << endl;
+        return -1;
+    }
 
     // Asignar buffers de sonido a sonidos
     sonidoPong.setBuffer(bufferPong);
     sonidoPunto.setBuffer(bufferPunto);
+    sonidoGanar.setBuffer(bufferGanar);
 
     // Inicializar Linea Punteda
     inicializarLineaPunteada(lineaPunteada, ventana);
