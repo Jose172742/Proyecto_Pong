@@ -22,7 +22,7 @@ int puntajeJugador1 = 0;
 int puntajeJugador2 = 0;
 
 // Velocidad y direccion de la pelota
-float velocidadPelota = 0.60f;
+float velocidadPelota = 1.60f;
 Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 
 // Sonidos
