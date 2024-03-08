@@ -31,6 +31,8 @@ SoundBuffer bufferPunto;
 Sound sonidoPong;
 Sound sonidoPunto;
 
+bool pausaJuego1 = false;
+
 // Metodo Movimiento Paletas
 void moverPaletas()
 {
@@ -98,11 +100,6 @@ int mostrarMenu()
     opcion1.setPosition(150, 300);
     opcion1.setFillColor(Color::White);
 
-    // Boton Opcion 2 (1 VS BOT)
-    Text opcion2("Jugar 1 vs BOT", fuente, 30);
-    opcion2.setPosition(150, 350);
-    opcion2.setFillColor(Color::White);
-
     // Boton Salir
     Text opcionSalir("Salir", fuente, 30);
     opcionSalir.setPosition(150, 400);
@@ -133,14 +130,6 @@ int mostrarMenu()
                     return 1;
                 }
 
-                // Opcion 2 seleccionada
-                else if (opcion2.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
-                {
-                    puntajeJugador1 = 0;
-                    puntajeJugador2 = 0;
-                    return 2;
-                }
-
                 // Opcion Salir seleccionada
                 else if (opcionSalir.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
                 {
@@ -157,13 +146,83 @@ int mostrarMenu()
         ventana.draw(titulo2);
 
         ventana.draw(opcion1);
-        ventana.draw(opcion2);
         ventana.draw(opcionSalir);
 
         ventana.display();
     }
     return eleccionMenu; // Se incluye para evitar advertencias del compilador
 }
+
+//Metodo de Pausa
+void manejarPausa()
+{
+    Font fuente;
+
+    if (fuente.loadFromFile("Pixel-UniCode.ttf"))
+    {
+        Text pausaTexto("PAUSA", fuente, 50);
+        pausaTexto.setPosition(ventana.getSize().x / 2 - pausaTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - pausaTexto.getGlobalBounds().height / 2);
+        pausaTexto.setFillColor(Color::White);
+
+        Text reanudarTexto("1. Reanudar", fuente, 30);
+        reanudarTexto.setPosition(ventana.getSize().x / 2 - reanudarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 30);
+        reanudarTexto.setFillColor(Color::White);
+
+        Text reiniciarTexto("2. Reiniciar", fuente, 30);
+        reiniciarTexto.setPosition(ventana.getSize().x / 2 - reiniciarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 70);
+        reiniciarTexto.setFillColor(Color::White);
+
+        Text salirMenuTexto("3. Salir a Menú", fuente, 30);
+        salirMenuTexto.setPosition(ventana.getSize().x / 2 - salirMenuTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 110);
+        salirMenuTexto.setFillColor(Color::Red);
+
+        while (ventana.isOpen() && (pausaJuego1))
+        {
+            Event evento;
+            while (ventana.pollEvent(evento))
+            {
+                if (evento.type == Event::Closed)
+                    ventana.close();
+
+                // Manejar opciones de pausa con el mouse
+                else if (evento.type == Event::MouseButtonPressed)
+                {
+                    Vector2i posicionMouse = Mouse::getPosition(ventana);
+
+                    if (reanudarTexto.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
+                    {
+                        pausaJuego1 = false; // Reanudar juego 1
+                        return;  // Salir del bucle al reanudar
+                    }
+                    else if (reiniciarTexto.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
+                    {
+                        // Reiniciar juego 1
+                        puntajeJugador1 = 0;
+                        puntajeJugador2 = 0;
+                        resetearPelota();
+                        pausaJuego1 = false;
+                        return;  // Salir del bucle al reiniciar
+                    }
+                    else if (salirMenuTexto.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
+                    {
+                        // Salir a menú desde juego 1
+                        pausaJuego1 = false;
+                        eleccionMenu = mostrarMenu();
+                        return;  // Salir del bucle al salir al menú
+                    }
+                }
+            }
+
+            ventana.clear();
+            ventana.draw(pausaTexto);
+            ventana.draw(reanudarTexto);
+            ventana.draw(reiniciarTexto);
+            ventana.draw(salirMenuTexto);
+            ventana.display();
+        }
+    }
+}
+
 
 // Metodo Movimiento Pelota
 void moverPelota()
@@ -270,6 +329,55 @@ void inicializarLineaPunteada(vector<RectangleShape>& lineaPunteada, const Rende
     }
 }
 
+//Metodo de 1 VS 1
+void jugarModo1vs1()
+{
+    paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
+    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
+    resetearPelota();
+
+    while (ventana.isOpen())
+    {
+        Event evento;
+
+        while (ventana.pollEvent(evento))
+        {
+            if(evento.type == Event::Closed)
+                ventana.close();
+
+            else if (evento.type == Event::KeyPressed && evento.key.code == Keyboard::P)
+                pausaJuego1 = !pausaJuego1;
+
+            else if (evento.type == Event::KeyPressed && evento.key.code == Keyboard::Escape)
+            {
+                eleccionMenu = mostrarMenu();
+
+                if (eleccionMenu != 1)
+                {
+                    paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
+                    paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
+                    pausaJuego1 = false;
+
+                    return;
+                }
+            }
+        }
+
+        ventana.clear();
+
+        if (!pausaJuego1)
+        {
+            moverPaletas();
+            moverPelota();
+        }
+
+        renderizarVentana();
+
+        if (pausaJuego1)
+            manejarPausa();
+    }
+}
+
 // Metodo Principal (Ejecutar)
 int main()
 {
@@ -306,66 +414,9 @@ int main()
 
     eleccionMenu = mostrarMenu();
 
-    // Jugar 1 vs 1
     if (eleccionMenu == 1)
     {
-        paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
-        paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
-        resetearPelota();
-
-        while (ventana.isOpen())
-        {
-            Event evento;
-            while (ventana.pollEvent(evento))
-            {
-                if (evento.type == Event::Closed)
-                    ventana.close();
-            }
-
-            ventana.clear();
-
-            moverPaletas();
-            moverPelota();
-
-            renderizarVentana();
-        }
-    }
-
-    // Jugar 1 vs BOT
-    else if (eleccionMenu == 2)
-    {
-        paleta1.setPosition(50, ventana.getSize().y / 2 - paleta1.getSize().y / 2);
-        paleta2.setPosition(ventana.getSize().x - 50 - paleta2.getSize().x, ventana.getSize().y / 2 - paleta2.getSize().y / 2);
-        resetearPelota();
-
-        while (ventana.isOpen())
-        {
-            Event evento;
-            while (ventana.pollEvent(evento))
-            {
-                if (evento.type == Event::Closed)
-                    ventana.close();
-            }
-
-            ventana.clear();
-
-            // Mover la paleta del jugador
-            moverPaletas();
-
-            // Mover la paleta del BOT (lógica simple, sigue la pelota)
-            if (pelota.getPosition().y < paleta2.getPosition().y && paleta2.getPosition().y > 0)
-            {
-                paleta2.move(0, -0.5);
-            }
-            else if (pelota.getPosition().y > paleta2.getPosition().y && paleta2.getPosition().y < ventana.getSize().y - paleta2.getSize().y)
-            {
-                paleta2.move(0, 0.5);
-            }
-
-            // Mover la pelota y renderizar la ventana
-            moverPelota();
-            renderizarVentana();
-        }
+        jugarModo1vs1();
     }
 
     return 0;
