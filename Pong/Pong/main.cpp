@@ -22,7 +22,7 @@ int puntajeJugador1 = 0;
 int puntajeJugador2 = 0;
 
 // Velocidad y direccion de la pelota
-float velocidadPelota = 0.60f;
+float velocidadPelota = 0.6f;
 Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 
 // Sonidos
@@ -221,20 +221,20 @@ void manejarPausa()
 
     if (fuente.loadFromFile("Pixel-UniCode.ttf"))
     {
-        Text pausaTexto("PAUSA", fuente, 50);
-        pausaTexto.setPosition(ventana.getSize().x / 2 - pausaTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - pausaTexto.getGlobalBounds().height / 2);
-        pausaTexto.setFillColor(Color::White);
+        Text pausaTexto("PAUSA", fuente, 150);
+        pausaTexto.setPosition(ventana.getSize().x / 2 - pausaTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - pausaTexto.getGlobalBounds().height / 2 - 300);
+        pausaTexto.setFillColor(Color::Yellow);
 
-        Text reanudarTexto("1. Reanudar", fuente, 30);
-        reanudarTexto.setPosition(ventana.getSize().x / 2 - reanudarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 30);
+        Text reanudarTexto("1. Reanudar", fuente, 50);
+        reanudarTexto.setPosition(ventana.getSize().x / 2 - reanudarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - 90);
         reanudarTexto.setFillColor(Color::White);
 
-        Text reiniciarTexto("2. Reiniciar", fuente, 30);
-        reiniciarTexto.setPosition(ventana.getSize().x / 2 - reiniciarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 70);
+        Text reiniciarTexto("2. Reiniciar", fuente, 50);
+        reiniciarTexto.setPosition(ventana.getSize().x / 2 - reiniciarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - 60);
         reiniciarTexto.setFillColor(Color::White);
 
-        Text salirMenuTexto("3. Salir a Menú", fuente, 30);
-        salirMenuTexto.setPosition(ventana.getSize().x / 2 - salirMenuTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 110);
+        Text salirMenuTexto("3. Salir a Menú", fuente, 50);
+        salirMenuTexto.setPosition(ventana.getSize().x / 2 - salirMenuTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - 30);
         salirMenuTexto.setFillColor(Color::Red);
 
         while (ventana.isOpen() && (pausaJuego1))
