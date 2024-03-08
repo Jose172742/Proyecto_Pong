@@ -34,6 +34,7 @@ Sound sonidoPunto;
 Sound sonidoGanar;
 
 bool pausaJuego1 = false;
+///
 
 // Metodo Movimiento Paletas
 void moverPaletas()
@@ -71,6 +72,45 @@ void resetearPelota()
     velocidadPelotaVector.y = -velocidadPelota;
 }
 
+
+// Método mostrarCreditos
+void mostrarCreditos()
+{
+    // Crear ventana de créditos
+    RenderWindow creditosVentana(VideoMode(400, 250), "Créditos", Style::Close);
+
+    // Texto de créditos
+    string mensajeCreditos = "Autores:\nALVAREZ JOSE\nANAHY HERRERA\nLOJAN SEBASTIAN\nLUZURIAGA ANDRES";
+
+    Font fuenteCreditos;
+    if (!fuenteCreditos.loadFromFile("Pixel-UniCode.ttf"))
+    {
+        // Manejar el error de carga de fuente
+        return;
+    }
+
+    Text textoCreditos(mensajeCreditos, fuenteCreditos, 40);
+    textoCreditos.setPosition(creditosVentana.getSize().x / 2 - textoCreditos.getGlobalBounds().width / 2,
+                              creditosVentana.getSize().y / 2 - textoCreditos.getGlobalBounds().height / 2);
+    textoCreditos.setFillColor(Color::White);
+
+    while (creditosVentana.isOpen())
+    {
+        Event eventoCreditos;
+        while (creditosVentana.pollEvent(eventoCreditos))
+        {
+            if (eventoCreditos.type == Event::Closed)
+                creditosVentana.close();
+            else if (eventoCreditos.type == Event::MouseButtonPressed)
+                creditosVentana.close(); // Cerrar la ventana al hacer clic
+        }
+
+        creditosVentana.clear();
+        creditosVentana.draw(textoCreditos);
+        creditosVentana.display();
+    }
+}
+
 // Función para manejar el menú de inicio
 int mostrarMenu()
 {
@@ -84,28 +124,34 @@ int mostrarMenu()
     // Membrete
     // Titulo Proyecto Juego
     Text titulo("Proyecto Juego Final", fuente, 30);
-    titulo.setPosition(ventana.getSize().x / 2 - titulo.getGlobalBounds().width / 2, 20);
+    titulo.setPosition(ventana.getSize().x / 2 - titulo.getGlobalBounds().width / 2, 50);
     titulo.setFillColor(Color::White);
 
     // Titulo Grupo 2
     Text titulo1("Grupo #2", fuente, 30);
-    titulo1.setPosition(ventana.getSize().x / 2 - titulo1.getGlobalBounds().width / 2, 50);
+    titulo1.setPosition(ventana.getSize().x / 2 - titulo1.getGlobalBounds().width / 2, 70);
     titulo1.setFillColor(Color::White);
 
     // Titulo Pong
-    Text titulo2("JUEGO PONG", fuente, 100);
+    Text titulo2("JUEGO PONG", fuente, 150);
     titulo2.setPosition(ventana.getSize().x / 2 - titulo2.getGlobalBounds().width / 2, 80);
     titulo2.setFillColor(Color::Red);
 
     // Boton Opcion 1 (1 VS 1)
-    Text opcion1("Jugar 1 vs 1", fuente, 30);
-    opcion1.setPosition(150, 300);
+    Text opcion1("Jugar   1 vs 1", fuente, 50);
+    opcion1.setPosition(ventana.getSize().x / 2 - titulo2.getGlobalBounds().width / 2, 350);
     opcion1.setFillColor(Color::White);
 
     // Boton Salir
-    Text opcionSalir("Salir", fuente, 30);
-    opcionSalir.setPosition(150, 400);
+    Text opcionSalir("Salir", fuente, 45);
+    opcionSalir.setPosition(ventana.getSize().x / 2 - titulo2.getGlobalBounds().width / 2, 400);
     opcionSalir.setFillColor(Color::Red);
+
+    // Boton Creditos
+    Text opcionCreditos("Créditos", fuente, 45);
+    opcionCreditos.setPosition(ventana.getSize().x / 2 - opcionCreditos.getGlobalBounds().width / 2, 550);
+    opcionCreditos.setFillColor(Color::Green);
+
 
     while (ventana.isOpen())
     {
@@ -138,6 +184,17 @@ int mostrarMenu()
                     ventana.close();
                     return -1;
                 }
+
+                // Opcion Creditos seleccionada
+                else if (evento.type == Event::MouseButtonPressed)
+                {
+                    Vector2i posicionMouse = Mouse::getPosition(ventana);
+
+                    if (opcionCreditos.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
+                    {
+                        mostrarCreditos();
+                    }
+                }
             }
         }
 
@@ -149,6 +206,8 @@ int mostrarMenu()
 
         ventana.draw(opcion1);
         ventana.draw(opcionSalir);
+        ventana.draw(opcionCreditos);
+
 
         ventana.display();
     }
@@ -194,7 +253,7 @@ void manejarPausa()
                     if (reanudarTexto.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
                     {
                         pausaJuego1 = false; // Reanudar juego 1
-                        return;  // Salir del bucle al reanudar
+                        return;
                     }
                     else if (reiniciarTexto.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
                     {
@@ -203,7 +262,7 @@ void manejarPausa()
                         puntajeJugador2 = 0;
                         resetearPelota();
                         pausaJuego1 = false;
-                        return;  // Salir del bucle al reiniciar
+                        return;
                     }
                     else if (salirMenuTexto.getGlobalBounds().contains(posicionMouse.x, posicionMouse.y))
                     {
