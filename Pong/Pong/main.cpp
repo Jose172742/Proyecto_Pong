@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-// Declaraciones Globales
+///Declaraciones Globales
 RenderWindow ventana(VideoMode(1200, 750), "Pong");
 RectangleShape paleta1(Vector2f(15, 100));
 RectangleShape paleta2(Vector2f(15, 100));
@@ -22,7 +22,7 @@ int puntajeJugador1 = 0;
 int puntajeJugador2 = 0;
 
 // Velocidad y direccion de la pelota
-float velocidadPelota = 1.60f;
+float velocidadPelota = 0.60f;
 Vector2f velocidadPelotaVector(velocidadPelota, -velocidadPelota);
 
 // Sonidos
@@ -35,6 +35,8 @@ Sound sonidoGanar;
 
 bool pausaJuego1 = false;
 ///
+    ///
+        ///
 
 // Metodo Movimiento Paletas
 void moverPaletas()
@@ -221,20 +223,20 @@ void manejarPausa()
 
     if (fuente.loadFromFile("Pixel-UniCode.ttf"))
     {
-        Text pausaTexto("PAUSA", fuente, 50);
-        pausaTexto.setPosition(ventana.getSize().x / 2 - pausaTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - pausaTexto.getGlobalBounds().height / 2);
-        pausaTexto.setFillColor(Color::White);
+        Text pausaTexto("PAUSA", fuente, 140);
+        pausaTexto.setPosition(ventana.getSize().x / 2 - pausaTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - pausaTexto.getGlobalBounds().height / 2 - 300);
+        pausaTexto.setFillColor(Color::Yellow);
 
-        Text reanudarTexto("1. Reanudar", fuente, 30);
-        reanudarTexto.setPosition(ventana.getSize().x / 2 - reanudarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 30);
+        Text reanudarTexto("1. Reanudar", fuente, 40);
+        reanudarTexto.setPosition(ventana.getSize().x / 2 - reanudarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - 60);
         reanudarTexto.setFillColor(Color::White);
 
-        Text reiniciarTexto("2. Reiniciar", fuente, 30);
-        reiniciarTexto.setPosition(ventana.getSize().x / 2 - reiniciarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 70);
+        Text reiniciarTexto("2. Reiniciar", fuente, 40);
+        reiniciarTexto.setPosition(ventana.getSize().x / 2 - reiniciarTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - 30 );
         reiniciarTexto.setFillColor(Color::White);
 
-        Text salirMenuTexto("3. Salir a Menú", fuente, 30);
-        salirMenuTexto.setPosition(ventana.getSize().x / 2 - salirMenuTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 + 110);
+        Text salirMenuTexto("3. Salir a Menú", fuente, 40);
+        salirMenuTexto.setPosition(ventana.getSize().x / 2 - salirMenuTexto.getGlobalBounds().width / 2, ventana.getSize().y / 2 - 0);
         salirMenuTexto.setFillColor(Color::Red);
 
         while (ventana.isOpen() && (pausaJuego1))
@@ -275,15 +277,16 @@ void manejarPausa()
             }
 
             ventana.clear();
+
             ventana.draw(pausaTexto);
             ventana.draw(reanudarTexto);
             ventana.draw(reiniciarTexto);
             ventana.draw(salirMenuTexto);
+
             ventana.display();
         }
     }
 }
-
 
 // Metodo Movimiento Pelota
 void moverPelota()
@@ -386,7 +389,7 @@ void renderizarVentana()
     // Declaracion en Ventana
     ventana.clear();
 
-    // Dibujar recuadro global
+    // Dibujar recuadro
     recuadro.setPosition(50, 70);
     recuadro.setOutlineThickness(1);
     recuadro.setOutlineColor(Color::White);
