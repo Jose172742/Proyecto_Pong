@@ -208,7 +208,6 @@ int mostrarMenu()
         ventana.draw(opcionSalir);
         ventana.draw(opcionCreditos);
 
-
         ventana.display();
     }
     return eleccionMenu; // Se incluye para evitar advertencias del compilador
@@ -275,10 +274,12 @@ void manejarPausa()
             }
 
             ventana.clear();
+
             ventana.draw(pausaTexto);
             ventana.draw(reanudarTexto);
             ventana.draw(reiniciarTexto);
             ventana.draw(salirMenuTexto);
+
             ventana.display();
         }
     }
@@ -539,4 +540,3 @@ int main()
 
     return 0;
 }
-
